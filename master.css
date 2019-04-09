@@ -8,24 +8,75 @@ html {
 body {
   margin: 0 auto 0 auto;
   padding: 0;
-  max-width: 70vw;
 }
 
 main {
-  margin-left: 16px;
-  margin-right: 16px;
+  margin: 0 auto 0 auto;
+  max-width: 70vw;
+}
+
+nav {
+  margin-bottom: 20px;
+  background-color: #272822;
 }
 
 a {
   text-decoration: none;
+  width: 70px;
 }
 
 a:hover {
   text-decoration: underline;
 }
 
+
 /* navbar */
 
+ul {
+  list-style-type: none;
+  margin: 0 auto 0 auto;
+  padding: 0;
+  overflow: hidden;
+  background-color: #272822;
+  max-width: 70vw;
+}
+
+li {
+  float: left;
+}
+
+li.right {
+  float: right;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 0px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  color:#272822;
+  background-color: #fff;
+}
+
+@media screen and (max-width: 600px) {
+  ul {
+    max-width: 100%;
+  }
+}
+
+
+
+/* navbar */
+
+/*
 ul.topnav {
   list-style-type: none;
   padding: 0;
@@ -56,6 +107,8 @@ ul.topnav li.right {
   ul.topnav li.right, 
   ul.topnav li {float: none;}
 }
+
+*/
 
 /* registration */
 input[type=text], input[type=password] {

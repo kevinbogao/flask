@@ -8,46 +8,76 @@ html {
 body {
   margin: 0 auto 0 auto;
   padding: 0;
-  max-width: 70vw;
 }
 
 main {
-  margin-left: 16px;
-  margin-right: 16px;
+  margin: 0 auto 0 auto;
+  max-width: 70vw;
 }
-/* navbar */
 
-ul.topnav {
+nav {
+  margin-bottom: 20px;
+  background-color: #272822;
+}
+
+a {
+  text-decoration: none;
+  width: 70px;
+}
+
+
+/* navbar */
+ul {
   list-style-type: none;
+  margin: 0 auto 0 auto;
   padding: 0;
   overflow: hidden;
+  max-width: 70vw;
 }
 
-ul.topnav li {
+li {
   float: left;
 }
 
-ul.topnav li a {
-  display: block;
-  color: #272822;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-ul.topnav li a:hover {
-  text-decoration: underline;
-}
-
-ul.topnav li.right {
+li.right {
   float: right;
 }
 
-@media screen and (max-width: 600px) {
-  ul.topnav li.right, 
-  ul.topnav li {float: none;}
+li a {
+  display: block;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 0px;
+  text-decoration: none;
 }
 
+li a:hover:not(.active) {
+  background-color: #000000;
+}
+
+li a:hover.active {
+  background-color: #f8f8f2;
+}
+
+.active {
+  color: #272822;
+  background-color: #fff;
+}
+
+@media screen and (max-width: 600px) {
+  main {
+    max-width: 80vw;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  ul {
+    max-width: 100%;
+  }
+  main {
+    max-width: 90vw;
+  }
+}
 
 /* registration */
 input[type=text], input[type=password] {
@@ -92,9 +122,14 @@ input[type=text]:focus, input[type=password]:focus {
 }
 
 .success {
+  font-size: 18px;
   color: #fff;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  height: 37px;
   text-align: center;
   background-color: #a6e22d;
+  margin-bottom: 30px;
+}
+
+.success p{
+  padding-top: 5px;
 }

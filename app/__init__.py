@@ -1,11 +1,11 @@
 import os
-
 import sqlite3
-
 import functools
 
+from data import Articles
 from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 ### create database if it doesn't exesits ###
@@ -73,18 +73,50 @@ def close_db(e=None):
 app = Flask(__name__)
 app.secret_key='dev'
 
+
+# placeholder articles
+Articles = Articles()
+
+### login wrap ###
+def logged_in(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if 'logged_in' in session:
+            return view(**kwargs)
+        else:
+            flash('Unauthorised, Please login', 'error')
+            return redirect(url_for('login'))
+    return wrapped_view
+
+
+########################### templates ##################################
+
 ### home page ###
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', active='home')
 
 
-### home page ###
 
+
+
+@app.route('/posts')
+def posts():
+    return render_template('posts.html', posts = Articles, active='posts')
+
+
+@app.route('/post/<string:id>')
+def post(id):
+    return render_template('post.html', id=id)
+
+
+
+
+### about page ###
 @app.route('/about')
 #@logged_in
 def about():
-    return render_template('home.html')
+    return render_template('home.html', active='about')
 
 ### registration ###
 @app.route('/register', methods=('GET', 'POST'))
@@ -133,7 +165,7 @@ def register():
 
         flash(error, 'error')
 
-    return render_template('register.html')
+    return render_template('register.html', active='register')
 
 
 ### user login ###
@@ -164,20 +196,7 @@ def login():
 
         flash(error, 'error')
 
-    return render_template('login.html')
-
-
-### login wrap ###
-def logged_in(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if 'logged_in' in session:
-            return view(**kwargs)
-        else:
-            flash('Unauthorised, Please login', 'error')
-            return redirect(url_for('login'))
-    return wrapped_view
-
+    return render_template('login.html', active='login')
 
 
 
