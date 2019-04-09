@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Blog</title>
+    <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- navbar top start -->
+    <nav>
+      <div class="navbar">
+        <ul class="topnav">
+          <!--
+          <li><a href="/">Logo</a></li>
+          -->
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          {% if session.logged_in %}
+            <li class="right"><a href="/logout">Log out</a></li>
+            <li class="right"><a href="/editor">Editor</a></li>
+          {% else %}
+            <li class="right"><a href="/login">Log in</a></li>
+            <li class="right"><a href="/register">Sign up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <!-- navbar top start -->
+
+    <main>
+
+      <!-- div for flash message -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="{{ category }}">
+            <p>
+              {{ message }}
+            </p>
+          </div>
+        {% endfor %}
+      {% endwith %}
+
+      <!-- body content -->
+      {% block body %}
+      {% endblock %}
+
+    </main>
+
+  </body>
+</html>

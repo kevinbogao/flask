@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="register">
+    <form method="post">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" required>
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" required>
+      <label for="input_pass">Password</label>
+      <input type="password" name="input_pass" id="input_pass" required>
+      <label for="confirm_pass">Confirm password</label>
+      <input type="password" name="confirm_pass" id="confirm_pass" required>
+      <!--
+      <input type="submit" value="Register">
+      -->
+      <button type="submit" class="registerbtn" value="Register">Register</button>
+    </form>
+  </div>
+{% endblock body %}

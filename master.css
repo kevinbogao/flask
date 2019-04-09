@@ -1,0 +1,145 @@
+/* global setting */
+html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+body {
+  margin: 0 auto 0 auto;
+  padding: 0;
+  max-width: 70vw;
+}
+
+main {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* navbar */
+
+ul.topnav {
+  list-style-type: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+ul.topnav li {
+  float: left;
+}
+
+ul.topnav li a {
+  display: block;
+  color: #272822;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+ul.topnav li a:hover {
+  text-decoration: underline;
+}
+
+ul.topnav li.right {
+  float: right;
+}
+
+@media screen and (max-width: 600px) {
+  ul.topnav li.right, 
+  ul.topnav li {float: none;}
+}
+
+/* registration */
+input[type=text], input[type=password] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 14px;
+  margin: 5px 0 10px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+
+.registerbtn {
+  font-size: 18px;
+  background-color: #66d9ef;
+  color: white;
+  height: 37px;
+  margin: 15px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+
+
+/* flash */
+.error {
+  font-size: 18px;
+  color: #fff;
+  height: 37px;
+  text-align: center;
+  background-color: #f92772;
+  margin-bottom: 30px;
+}
+
+.error p{
+  padding-top: 5px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+
+h3 {
+  font-size: 15px;
+  font-weight: 400;
+  font-style: italic;
+  margin-top: 2px;
+  margin-bottom: 3px;
+}
+
+p {
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+ul.article-meta {
+  list-style-type: none;
+  padding: 0;
+  overflow: hidden;
+  margin: 0;
+}
+
+
+ul.article-meta li {
+  float: left;
+}
+
+li#author {
+  margin-left: 10px;
+  text-decoration: underline;
+  font-weight: 900px
+}
+
+
+li#author:hover {
+  text-decoration: none;
+}
