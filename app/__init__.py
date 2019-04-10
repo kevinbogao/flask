@@ -201,7 +201,18 @@ def login():
 ### editor ###
 @app.route('/editor')
 def editor():
-    return render_template('editor.html', active='editor')
+    db = get_db()
+    error = None
+    posts = db.execute(
+        "SELECT * FROM posts WHERE author = ?", (session['username'],)  # add the ','
+    ).fetchall()
+    #if posts > 0:
+    if posts:
+        return render_template('editor.html', active='editor', posts=posts)
+    else:
+        error = "You have not postes any post yet"
+        flash(error, 'error')
+        return render_template('create.html', active='editor')
 
 
 ### create a post ###
@@ -228,7 +239,7 @@ def create():
             db.commit()
             return redirect(url_for('posts'))
 
-    return render_template('create.html')
+    return render_template('create.html', active='editor')
 
 
 ### logout ###
@@ -238,36 +249,6 @@ def logout():
     session.clear()
     flash('You are now logged out')
     return redirect(url_for('login'))
-
-
-
-# Add Article
-#@app.route('/add_article', methods=('GET', 'POST'))
-#@logged_in
-#def add_article():
-#    form = ArticleForm(request.form)
-#    if request.method == 'POST' and form.validate():
-#        title = form.title.data
-#        body = form.body.data
-#
-#        # Create Cursor
-#        cur = mysql.connection.cursor()
-#
-#        # Execute
-#        cur.execute("INSERT INTO articles(title, body, author) VALUES(%s, %s, %s)",(title, body, session['username']))
-#
-#        # Commit to DB
-#        mysql.connection.commit()
-#
-#        #Close connection
-#        cur.close()
-#
-#        flash('Article Created', 'success')
-#
-#        return redirect(url_for('dashboard'))
-#
-#    return render_template('add_article.html', form=form)
-
 
 
 if (__name__) == '__main__':

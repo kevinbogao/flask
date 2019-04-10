@@ -2,5 +2,16 @@
 
 {% block body %}
   <a class="btn" href="/create">New post</a>
+
+  <div class="container">
+    {% for post in posts %}
+      <div class="post-slot">
+        <ul>
+          <li>{{ post.title }}</li>
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+
 {% endblock %}
 
