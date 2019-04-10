@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 ### create database if it doesn't exesits ###
 # path to database
-DB_PATH = "database/app.sqlite"
+DB_PATH = "database/app.sqlite"   # relative path for "flask run"
 # check if database exists
 exists = os.path.isfile(DB_PATH)
 
