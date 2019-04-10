@@ -192,11 +192,17 @@ def login():
             session['logged_in'] = True
             # flask message when logged in
             flash('You have logged in', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('editor'))
 
         flash(error, 'error')
 
     return render_template('login.html', active='login')
+
+
+### editor ###
+@app.route('/editor')
+def editor():
+    return render_template('editor.html', active='editor')
 
 
 
