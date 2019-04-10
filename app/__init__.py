@@ -73,9 +73,6 @@ app = Flask(__name__)
 app.secret_key='dev'
 
 
-# placeholder articles
-Articles = Articles()
-
 ### login wrap ###
 def logged_in(view):
     @functools.wraps(view)
@@ -87,8 +84,8 @@ def logged_in(view):
             return redirect(url_for('login'))
     return wrapped_view
 
-
 ########################### templates ##################################
+
 
 ### home page ###
 @app.route('/')
@@ -96,19 +93,18 @@ def home():
     return render_template('home.html', active='home')
 
 
-
-
-
+### home page ###
 @app.route('/posts')
 def posts():
-    return render_template('posts.html', posts = Articles, active='posts')
+    db = get_db()
+    posts = db.execute("SELECT * FROM posts")
+    return render_template('posts.html', posts = posts, active='posts')
 
 
+# TODO: single post template 
 @app.route('/post/<string:id>')
 def post(id):
     return render_template('post.html', id=id)
-
-
 
 
 ### about page ###
@@ -116,6 +112,7 @@ def post(id):
 #@logged_in
 def about():
     return render_template('home.html', active='about')
+
 
 ### registration ###
 @app.route('/register', methods=('GET', 'POST'))
