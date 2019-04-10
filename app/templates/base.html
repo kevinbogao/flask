@@ -7,6 +7,7 @@
     <title>Blog</title>
     <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+    <script type="text/javascript" src="../static/main.js"></script>
   </head>
   <body>
     <!-- navbar start -->
@@ -41,8 +42,9 @@
       {% block body %}
       {% endblock %}
     </main>
-    <script charset="utf-8">
+    <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
+    <script>
+      CKEDITOR.replace("body")
     </script>
-    <script type="text/javascript" src="../static/main.js"></script>
   </body>
 </html>

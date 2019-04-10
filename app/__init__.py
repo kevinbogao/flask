@@ -7,9 +7,7 @@ from flask import Flask, flash, g, redirect, render_template, request, session, 
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-
 ### create database if it doesn't exesits ###
-
 # path to database
 DB_PATH = "database/app.sqlite"
 # check if database exists
@@ -53,6 +51,7 @@ else:
 
 
 # function for open database connection
+# maybe it can be deleted since to sinplefy it
 def get_db():
     db = sqlite3.connect(DB_PATH)
     # return rows as dictionary
@@ -187,7 +186,7 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user['id']  # may not be needed
             session['username'] = username
             session['logged_in'] = True
             # flask message when logged in
@@ -205,6 +204,32 @@ def editor():
     return render_template('editor.html', active='editor')
 
 
+### create a post ###
+@app.route('/create', methods=('GET', 'POST'))
+@logged_in
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO posts (title, body, author)'
+                ' VALUES (?, ?, ?)',
+                (title, body, session['username'])
+            )
+            db.commit()
+            return redirect(url_for('posts'))
+
+    return render_template('create.html')
+
 
 ### logout ###
 @app.route('/logout')
@@ -213,6 +238,36 @@ def logout():
     session.clear()
     flash('You are now logged out')
     return redirect(url_for('login'))
+
+
+
+# Add Article
+#@app.route('/add_article', methods=('GET', 'POST'))
+#@logged_in
+#def add_article():
+#    form = ArticleForm(request.form)
+#    if request.method == 'POST' and form.validate():
+#        title = form.title.data
+#        body = form.body.data
+#
+#        # Create Cursor
+#        cur = mysql.connection.cursor()
+#
+#        # Execute
+#        cur.execute("INSERT INTO articles(title, body, author) VALUES(%s, %s, %s)",(title, body, session['username']))
+#
+#        # Commit to DB
+#        mysql.connection.commit()
+#
+#        #Close connection
+#        cur.close()
+#
+#        flash('Article Created', 'success')
+#
+#        return redirect(url_for('dashboard'))
+#
+#    return render_template('add_article.html', form=form)
+
 
 
 if (__name__) == '__main__':
