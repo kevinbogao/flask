@@ -83,7 +83,7 @@ def logged_in(view):
         if 'logged_in' in session:
             return view(**kwargs)
         else:
-            flash('Unauthorised, Please login', 'error')
+            flash('Please login to view this page', 'error')
             return redirect(url_for('login'))
     return wrapped_view
 
