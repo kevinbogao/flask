@@ -97,6 +97,7 @@ def home():
 
 
 ### home page ###
+# TODO: add change the username to name
 @app.route('/posts')
 def posts():
     db = get_db()
@@ -196,7 +197,7 @@ def login():
         flash(error, 'error')
 
     return render_template('login.html', active='login')
-
+    
 
 ### editor ###
 @app.route('/editor')
