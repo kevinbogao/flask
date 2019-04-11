@@ -2,10 +2,12 @@ import os
 import sqlite3
 import functools
 
-from data import Articles
 from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
+## TODO:
+## change the the posts database stracture!
 
 ### create database if it doesn't exesits ###
 # path to database
@@ -13,6 +15,7 @@ DB_PATH = "database/app.sqlite"   # relative path for "flask run"
 # check if database exists
 exists = os.path.isfile(DB_PATH)
 
+# TODO check for the folder first!?
 if exists:
     pass
 else:
@@ -207,7 +210,7 @@ def editor():
     if posts:
         return render_template('editor.html', active='editor', posts=posts)
     else:
-        error = "You have not postes any post yet"
+        error = "You have not posted any post yet"
         flash(error, 'error')
         return render_template('create.html', active='editor')
 

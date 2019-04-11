@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -27,7 +26,7 @@
     </nav>
     <!-- navbar end -->
     <main>
-      <!-- div for flash message -->
+      <!-- flash message -->
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
           <div class="{{ category }}">
@@ -37,10 +36,11 @@
           </div>
         {% endfor %}
       {% endwith %}
-
+      <!-- flash message -->
       <!-- body content -->
       {% block body %}
       {% endblock %}
+      <!-- body content -->
     </main>
     <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
     <script>
