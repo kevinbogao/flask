@@ -5,6 +5,12 @@ import functools
 from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
+# NOTE:
+# recommeded flash messages are
+# 1. message
+# 2. error
+# 3. info
+# 4. warning
 
 ## TODO:
 ## change the the posts database stracture!
@@ -54,12 +60,12 @@ else:
 
 
 # function for open database connection
-# maybe it can be deleted since to sinplefy it
+# maybe it can be deleted since to simplify it
+# TODO: change it to my own code
 def get_db():
     db = sqlite3.connect(DB_PATH)
     # return rows as dictionary
     db.row_factory = sqlite3.Row
-
     return db
 
 
@@ -105,7 +111,7 @@ def posts():
     return render_template('posts.html', posts = posts, active='posts')
 
 
-# TODO: single post template 
+# TODO: single post template
 @app.route('/post/<string:id>')
 def post(id):
     return render_template('post.html', id=id)
@@ -197,7 +203,7 @@ def login():
         flash(error, 'error')
 
     return render_template('login.html', active='login')
-    
+
 
 ### editor ###
 @app.route('/editor')
@@ -248,7 +254,7 @@ def create():
 @logged_in
 def logout():
     session.clear()
-    flash('You are now logged out')
+    flash('You are now logged out', 'success')
     return redirect(url_for('login'))
 
 

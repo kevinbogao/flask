@@ -1,4 +1,5 @@
-// document.addEventListener("DOMContentLoaded", function() {
+// make sure the DOM loads first
+document.addEventListener("DOMContentLoaded", function() {
 //   // CKEDITOR.replace('body')
 // 
 //   // Not needed for now
@@ -15,5 +16,4 @@
 // 
 //   // TODO:
 //   // flash animations!!!
-// });
-// 
+});

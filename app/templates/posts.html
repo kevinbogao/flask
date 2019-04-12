@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <div class="posts">
-    {% for post in posts %}
-      <div class="post">
-        <h2><a href="post/{{post.id}}">{{post.title}}</a></h2>
-        <ul class="article-info">
-          <li><h3>{{post.create_date}}</h3></li>
-          <li class="author"><h3>{{post.author}}</h3></li>
-        </ul>
-        <p>{{post.body}}</p>
-      </div>
-    {% endfor %}
-  </div>
+  <!-- loop the posts backwards, so they will be dispalyed chronologically -->
+  {% for post in posts %}
+    <div class="post">
+      <h2><a href="post/{{post.id}}">{{post.title}}</a></h2>
+      <ul>
+        <li><h3>{{post.create_date}}</h3></li>
+        <li><h3>by</h3></li>
+        <li id="author"><h3>{{post.author}}</h3></li>
+      </ul>
+      <p>{{post.body}}</p>
+    </div>
+  {% endfor %}
 {% endblock %}
