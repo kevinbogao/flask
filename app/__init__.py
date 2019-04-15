@@ -1,28 +1,40 @@
+"""Flask backend
+
+Note: The code severs as backend for a simple blog;
+it handles registration, logins, and more
+
+Notes on __init__.py
+--------------------
+It is a monolithic script, and it may need to be broken
+up into moduals for scaling
+
+XXX TODO:
+- Change the the posts database stracture!
+- Check for the folder first for creating the database
+- Maybe change sqlite to MariaDB
+- Change get_db() and close_db() into my own code
+
+NOTE: recommeded flash messages are
+1. message
+2. error
+3. info
+4. warning
+
+"""
+
 import os
 import sqlite3
 import functools
-
 from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
-
-# NOTE:
-# recommeded flash messages are
-# 1. message
-# 2. error
-# 3. info
-# 4. warning
-
-## TODO:
-## change the the posts database stracture!
 
 ### create database if it doesn't exesits ###
 # path to database
 DB_PATH = "database/app.sqlite"   # relative path for "flask run"
 # check if database exists
-exists = os.path.isfile(DB_PATH)
+EXISTS = os.path.isfile(DB_PATH)
 
-# TODO check for the folder first!?
-if exists:
+if EXISTS:
     pass
 else:
     # create file
@@ -61,7 +73,6 @@ else:
 
 # function for open database connection
 # maybe it can be deleted since to simplify it
-# TODO: change it to my own code
 def get_db():
     db = sqlite3.connect(DB_PATH)
     # return rows as dictionary
@@ -79,11 +90,14 @@ def close_db(e=None):
 
 # create and configure the app
 app = Flask(__name__)
-app.secret_key='dev'
+app.secret_key = 'dev'
 
 
 ### login wrap ###
 def logged_in(view):
+    """
+    this is a login wraper
+    """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if 'logged_in' in session:
@@ -108,7 +122,7 @@ def home():
 def posts():
     db = get_db()
     posts = db.execute("SELECT * FROM posts")
-    return render_template('posts.html', posts = posts, active='posts')
+    return render_template('posts.html', posts=posts, active='posts')
 
 
 # TODO: single post template
@@ -153,7 +167,7 @@ def register():
         elif len(input_pass) < 7:
             error = 'The password will be more than 7 characters'
         elif db.execute(
-            'SELECT id FROM users WHERE username = ?', (username,)
+                'SELECT id FROM users WHERE username = ?', (username,)
         ).fetchone() is not None:
             error = 'Username {} is already taken.'.format(username)
 
