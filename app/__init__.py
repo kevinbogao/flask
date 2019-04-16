@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Flask backend
 
 Note: The code severs as backend for a simple blog;
@@ -13,6 +14,7 @@ XXX TODO:
 - Check for the folder first for creating the database
 - Maybe change sqlite to MariaDB
 - Change get_db() and close_db() into my own code
+- Format post url
 
 NOTE: recommeded flash messages are
 1. message
@@ -25,16 +27,14 @@ NOTE: recommeded flash messages are
 import os
 import sqlite3
 import functools
-from flask import Flask, flash, g, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-### create database if it doesn't exesits ###
-# path to database
-DB_PATH = "database/app.sqlite"   # relative path for "flask run"
-# check if database exists
-EXISTS = os.path.isfile(DB_PATH)
 
-if EXISTS:
+# Create database if it doesn't exsist
+DB_PATH = "database/app.sqlite"
+
+if os.path.isfile(DB_PATH):
     pass
 else:
     # create file
@@ -42,11 +42,12 @@ else:
     # change file permission
     os.chmod(DB_PATH, 0o644)
     # create connection
-    conn = sqlite3.connect(DB_PATH)
+    CON = sqlite3.connect(DB_PATH)
     # create cursor
-    cur = conn.cursor()
+    CUR = CON.cursor()
+
     # create users table
-    cur.execute("""
+    CUR.execute("""
                 CREATE TABLE users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name VARCHAR(100),
@@ -55,48 +56,41 @@ else:
                     register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
               """)
+
     # create posts table
-    cur.execute("""
+    CUR.execute("""
                 CREATE TABLE posts (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    author_id INTEGER,
                     title VARCHAR(255),
-                    author VARCHAR(100),
                     body TEXT,
-                    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (author_id) REFERENCES users (id)
                 );
               """)
     # commit change?
-    conn.commit()
+    CON.commit()
     # close connection
-    conn.close()
+    CON.close()
 
 
-# function for open database connection
-# maybe it can be deleted since to simplify it
-def get_db():
-    db = sqlite3.connect(DB_PATH)
-    # return rows as dictionary
-    db.row_factory = sqlite3.Row
-    return db
-
-
-# function for close database connection
-def close_db(e=None):
-    db = g.pop('db', None)
-
-    if db is not None:
-        db.close()
-
-
-# create and configure the app
+# Create and configure the app
 app = Flask(__name__)
 app.secret_key = 'dev'
 
 
-### login wrap ###
+# database connection
+def db_con():
+    con = sqlite3.connect(DB_PATH)
+    con.row_factory = sqlite3.Row
+    return con
+
+
+# Login wrap
 def logged_in(view):
-    """
-    this is a login wraper
+    """Return a new function that warps the orginal view,
+    the new function check if the user is logged in
+
     """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -107,48 +101,70 @@ def logged_in(view):
             return redirect(url_for('login'))
     return wrapped_view
 
-########################### templates ##################################
 
-
-### home page ###
+# Home page
 @app.route('/')
 def home():
+    """Returns the home page template"""
     return render_template('home.html', active='home')
 
 
-### home page ###
-# TODO: add change the username to name
+# About page
+@app.route('/about')
+def about():
+    """Returns the about page template"""
+    return render_template('about.html', active='about')
+
+
+# Posts page
 @app.route('/posts')
-def posts():
-    db = get_db()
-    posts = db.execute("SELECT * FROM posts")
+def all_posts():
+    """Returns the posts template which displays all posts that were
+    posted on the site.
+    All the posts are extracted from the sqlite database, users and posts
+    table
+    """
+    con = db_con()
+    posts = con.execute(
+                'select posts.title, posts.body, posts.create_date, users.name'
+                ' from posts inner join users on posts.author_id=users.id'
+                ' order by create_date desc'
+    ).fetchall()
+    con.close()
     return render_template('posts.html', posts=posts, active='posts')
 
 
-# TODO: single post template
-@app.route('/post/<string:id>')
-def post(id):
-    return render_template('post.html', id=id)
+# Single post page
+@app.route('/post/<string:title>')
+def single_post(title):
+    """
+    TODO: docstring, maybe redo the query
+    Args:
+        title (str): the title of the selected post
+
+    Returns:
+        The rendered template (full view) of the selected post
+
+    """
+    con = db_con()
+    post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
+    con.close()
+    return render_template('post.html', post=post, active='posts')
 
 
-### about page ###
-@app.route('/about')
-#@logged_in
-def about():
-    return render_template('home.html', active='about')
-
-
-### registration ###
+# Registration page
 @app.route('/register', methods=('GET', 'POST'))
 def register():
+    """Returns the registration template
+    The user is instructed to
+    """
     if request.method == 'POST':
         name = request.form['name']
         username = request.form['username']
         input_pass = request.form['input_pass']
         confirm_pass = request.form['confirm_pass']
 
-        # init database
-        db = get_db()
+        con = db_con()
 
         # reset error message
         error = None
@@ -166,8 +182,8 @@ def register():
             error = 'The passwords entered are not the same'
         elif len(input_pass) < 7:
             error = 'The password will be more than 7 characters'
-        elif db.execute(
-                'SELECT id FROM users WHERE username = ?', (username,)
+        elif con.execute(
+                'SELECT id FROM users WHERE username = ?', [username]
         ).fetchone() is not None:
             error = 'Username {} is already taken.'.format(username)
 
@@ -175,11 +191,12 @@ def register():
         if error is None:
             password = input_pass
             # inscert form into users table
-            db.execute(
-                'INSERT INTO users (name, username, password) VALUES(?, ?, ?)',
-                (name, username, generate_password_hash(password))
+            con.execute(
+                'INSERT INTO users (name, username, password) VALUES (?, ?, ?)',
+                [name, username, generate_password_hash(password)]
             )
-            db.commit()
+            con.commit()
+            con.close()
             flash('You have successfully registered', 'success')
             return redirect(url_for('login'))
 
@@ -188,16 +205,19 @@ def register():
     return render_template('register.html', active='register')
 
 
-### user login ###
+# Login page
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
+
+        con = db_con()
+
         error = None
-        user = db.execute(
-            'SELECT * FROM users WHERE username = ?', (username,)
+
+        user = con.execute(
+            'SELECT * FROM users WHERE username = ?', [username]
         ).fetchone()
 
         if user is None:
@@ -207,10 +227,9 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']  # may not be needed
-            session['username'] = username
+            session['user_id'] = user['id']
             session['logged_in'] = True
-            # flask message when logged in
+
             flash('You have logged in', 'success')
             return redirect(url_for('editor'))
 
@@ -219,15 +238,20 @@ def login():
     return render_template('login.html', active='login')
 
 
-### editor ###
+# Editor page
 @app.route('/editor')
 def editor():
-    db = get_db()
+    con = db_con()
+
     error = None
-    posts = db.execute(
-        "SELECT * FROM posts WHERE author = ?", (session['username'],)  # add the ','
+
+    posts = con.execute(
+                'SELECT posts.id, posts.title, posts.body, posts.create_date, users.name'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE author_id = ?'
+                ' ORDER BY create_date DESC', [session['user_id']]
     ).fetchall()
-    #if posts > 0:
+    con.close()
     if posts:
         return render_template('editor.html', active='editor', posts=posts)
     else:
@@ -236,10 +260,50 @@ def editor():
         return render_template('create.html', active='editor')
 
 
-### create a post ###
+# Create page
 @app.route('/create', methods=('GET', 'POST'))
 @logged_in
 def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            con = db_con()
+            con.execute(
+                'INSERT INTO posts (author_id, title, body)'
+                ' VALUES (?, ?, ?)',
+                [session['user_id'], title, body]
+            )
+            con.commit()
+            con.close()
+            return redirect(url_for('all_posts'))
+
+    return render_template('create.html', active='editor')
+
+
+# Edit post
+@app.route('/edit/<string:id>', methods=('GET', 'POST'))
+@logged_in
+def edit(id):
+    """
+    """
+
+    con = db_con()
+    post = con.execute('SELECT * FROM posts WHERE id = ?', [id]).fetchone()
+    con.close()
+
+    if post['author_id'] != session['user_id']:
+        flash('You are only authorised to edit your posts', 'error')
+        return redirect(url_for('editor'))
+
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
@@ -251,19 +315,33 @@ def create():
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO posts (title, body, author)'
-                ' VALUES (?, ?, ?)',
-                (title, body, session['username'])
+            con = db_con()
+            post = con.execute(
+                'UPDATE posts SET title = ?, body = ?'
+                ' WHERE id = ?',
+                [title, body, id]
             )
-            db.commit()
-            return redirect(url_for('posts'))
+            con.commit()
+            con.close()
+            return redirect(url_for('editor'))
 
-    return render_template('create.html', active='editor')
+    return render_template('edit.html', post=post)
 
 
-### logout ###
+# Delete post
+@app.route('/delete_article/<string:id>', methods=['POST'])
+@logged_in
+def delete(id):
+    con = db_con()
+    con.execute('DELETE FROM posts WHERE id = ?', [id])
+    con.commit()
+    con.close()
+
+    flash('Article Deleted', 'success')
+
+    return redirect(url_for('editor'))
+
+# Logout function
 @app.route('/logout')
 @logged_in
 def logout():
