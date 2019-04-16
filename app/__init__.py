@@ -81,6 +81,9 @@ app.secret_key = 'dev'
 
 # database connection
 def db_con():
+    """Establishs connection to the database
+    return the data as a dictionary
+    """
     con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
     return con
@@ -126,16 +129,34 @@ def all_posts():
     """
     con = db_con()
     posts = con.execute(
-                'select posts.title, posts.body, posts.create_date, users.name'
-                ' from posts inner join users on posts.author_id=users.id'
-                ' order by create_date desc'
+                'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' ORDER BY create_date DESC'
     ).fetchall()
     con.close()
     return render_template('posts.html', posts=posts, active='posts')
 
 
+# User page
+@app.route('/posts/<string:username>')
+def user(username):
+    """
+    TODO: add a go back to all link
+    """
+    con = db_con()
+    posts = con.execute(
+                'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE users.username = ?'
+                ' ORDER BY create_date DESC', [username]
+    ).fetchall()
+    con.close()
+    return render_template('user.html', posts=posts, active='posts')
+
+
+
 # Single post page
-@app.route('/post/<string:title>')
+@app.route('/posts/<string:title>')
 def single_post(title):
     """
     TODO: docstring, maybe redo the query
@@ -147,7 +168,13 @@ def single_post(title):
 
     """
     con = db_con()
-    post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
+    #post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
+    post = con.execute(
+                'SELECT posts.title, posts.body, posts.create_date, users.name'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE title = ?'
+                ' ORDER BY create_date DESC', [title]
+    ).fetchone()
     con.close()
     return render_template('post.html', post=post, active='posts')
 
@@ -208,6 +235,9 @@ def register():
 # Login page
 @app.route('/login', methods=('GET', 'POST'))
 def login():
+    """
+    TODO: docstring
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -241,6 +271,9 @@ def login():
 # Editor page
 @app.route('/editor')
 def editor():
+    """
+    TODO: docstring
+    """
     con = db_con()
 
     error = None
@@ -254,16 +287,19 @@ def editor():
     con.close()
     if posts:
         return render_template('editor.html', active='editor', posts=posts)
-    else:
-        error = "You have not posted any post yet"
-        flash(error, 'error')
-        return render_template('create.html', active='editor')
+
+    error = "You have not posted any post yet"
+    flash(error, 'error')
+    return render_template('create.html', active='editor')
 
 
 # Create page
 @app.route('/create', methods=('GET', 'POST'))
 @logged_in
 def create():
+    """
+    TODO: docstring
+    """
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
@@ -294,6 +330,7 @@ def create():
 @logged_in
 def edit(id):
     """
+    TODO: docstring
     """
 
     con = db_con()
@@ -329,15 +366,18 @@ def edit(id):
 
 
 # Delete post
-@app.route('/delete_article/<string:id>', methods=['POST'])
+@app.route('/delete/<string:id>', methods=['POST'])
 @logged_in
 def delete(id):
+    """
+    TODO: docstring
+    """
     con = db_con()
     con.execute('DELETE FROM posts WHERE id = ?', [id])
     con.commit()
     con.close()
 
-    flash('Article Deleted', 'success')
+    flash('Post deleted', 'success')
 
     return redirect(url_for('editor'))
 
@@ -345,6 +385,9 @@ def delete(id):
 @app.route('/logout')
 @logged_in
 def logout():
+    """
+    TODO: docstring
+    """
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
