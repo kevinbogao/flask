@@ -1,19 +1,13 @@
 {% extends "base.html" %}
 
 {% block body %}
-  {% for post in posts %}
-    <div class="post">
-      <h2><a href="posts/{{ post['title'] }}">{{ post['title'] }}</a></h2>
-      <h3>by <a href="/posts/{{ post['username'] }}">{{ post['name'] }}</a> on {{ post['create_date'] }}</h3>
-      <!--
-      <ul>
-        <li><h3>{{ post['create_date'] }}</h3></li>
-        <li><h3>by</h3></li>
-        <li id="author"><h3>{{ post['name'] }}</h3></li>
-      </ul>
-      -->
-      <p>{{ post['body']|safe }}</p>
-    </div>
-  {% endfor %}
-
+  <div class="container">
+    {% for post in posts %}
+      <div class="post">
+        <h2><a href="posts/{{ post['title'] }}">{{ post['title'] }}</a></h2>
+        <h3>by <a href="/posts/{{ post['username'] }}">{{ post['name'] }}</a> on {{ post['create_date'] }}</h3>
+        <p>{{ post['body']|safe }}</p>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

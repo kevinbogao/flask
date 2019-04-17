@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input type="text" name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <button type="submit" class="btn-blue" value="Log In">Log In</button>
-  </form>
+  <div class="container">
+    <form method="post">
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" required>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required>
+      <button type="submit" class="btn" value="Log In">Log In</button>
+    </form>
+  </div>
 {% endblock body %}
 
 

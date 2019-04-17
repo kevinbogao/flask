@@ -1,45 +1,30 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <button class="btn-blue" href="/create">New post</button>
- <a class="btn" href="/create">New post</a>
-
-  <!--
-  <div class="post">
-    {% for post in posts %}
-      <div class="post-slot">
-        <ul>
-          <li><h2>{{ post.title }}</h2></li>
-        </ul>
-      </div>
-    {% endfor %}
-  </div>
-  -->
-
-  <table>
-    <tr>
-      <th>Title</th>
-      <th>Author</th>
-      <th>Date</th>
-      <th></th>
-      <th></th>
-    </tr>
-    {% for post in posts %}
+  <div class="container">
+    <a class="btn" href="/create">New post</a>
+    <table>
       <tr>
-        <td>{{ post['title'] }}</td>
-        <td>{{ post['name'] }}</td>
-        <td>{{ post['create_date'] }}</td>
-        <td><a class="action" href="{{ url_for('edit', id=post['id']) }}">Edit</a></td>
-        <td>
-          <form action="{{ url_for('delete', id=post['id']) }}" method="post">
-            <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-          </form>
-        </td>
-
-
+        <th>Title</th>
+        <th>Author</th>
+        <th>Date</th>
+        <th></th>
+        <th></th>
       </tr>
-    {% endfor %}
-  </table>
-
+      {% for post in posts %}
+        <tr>
+          <td>{{ post['title'] }}</td>
+          <td>{{ post['name'] }}</td>
+          <td>{{ post['create_date'] }}</td>
+          <td class="right"><a class="action" href="{{ url_for('edit', id=post['id']) }}">Edit</a></td>
+          <td class='right'>
+            <form action="{{ url_for('delete', id=post['id']) }}" method="post">
+              <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
 {% endblock %}
 

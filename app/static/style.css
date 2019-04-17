@@ -2,31 +2,45 @@
 html {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
 }
 
 body {
   margin: 0 auto 0 auto;
   padding: 0;
+  max-width: 950px;
 }
 
 main {
-  margin: 0 auto 0 auto;
-  max-width: 900px;
+  margin-left: 16px;
+  margin-right: 16px;
 }
 
-/* Navbar */
+
+.btn{
+  color: #000;
+  background-color: #fff;
+  margin: 13px 0;
+  padding: 0;
+  height: 37px;
+  border: none;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'Noto Sans', sans-serif;
+  text-decoration: none;
+}
+
+/* navbar */
 nav {
+  margin-top: 20px;
   margin-bottom: 20px;
-  background-color: #272822;
+  font-family: 'Roboto', sans-serif;
 }
 
 nav ul {
   list-style-type: none;
-  margin: 0 auto 0 auto;
   padding: 0;
   overflow: hidden;
-  max-width: 900px;
 }
 
 nav li {
@@ -38,130 +52,106 @@ nav li.right {
 }
 
 nav li a {
-  width: 70px;
   display: block;
-  color: #ffffff;
+  color: #000;
   text-align: center;
-  padding: 14px 0px;
+  margin: 14px 16px;
   text-decoration: none;
+  font-size: 23px;
+  border-bottom: 2px solid transparent;
 }
 
-nav li a:hover:not(.active) {
-  background-color: #000000;
-}
-
-nav li a:hover.active {
-  background-color: #f8f8f2;
+nav li a:hover {
+  border-bottom: 2px solid #000;
 }
 
 .active {
-  color: #272822;
-  background-color: #fff;
-}
-
-/* Input boxes */
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 9px 14px;
-  margin: 5px 0 10px 0;
-  display: inline-block;
-  border: none;
-  background: #f1f1f1;
-  box-sizing: border-box;
-}
-
-input[type=text]:focus, input[type=password]:focus {
-  background-color: #ddd;
-  outline: none;
-}
-
-/* Buttons */
-.btn-blue {
-  font-size: 18px;
-  background-color: #66d9ef;
-  color: white;
-  margin: 15px 0;
-  height: 37px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
-
-/* Flash */
-/* the messages are inside of a div */
-.error {
-  font-size: 18px;
-  color: #fff;
-  height: 37px;
-  text-align: center;
-  background-color: #f92772;
-  margin-bottom: 30px;
-}
-
-.error p{
-  padding-top: 5px;
-}
-
-.success {
-  font-size: 18px;
-  color: #fff;
-  height: 37px;
-  text-align: center;
-  background-color: #a6e22d;
-  margin-bottom: 30px;
-}
-
-.success p{
-  padding-top: 5px;
+  border-bottom: 2px solid #000;
 }
 
 /* Posts */
-div.post h2 {
-  font-size: 24px;
-  font-weight: 400;
-  margin-bottom: 0px;
+div.container {
+  padding-top: 50px;
 }
 
-div.post h3 {
-  font-size: 15px;
-  font-weight: 400;
-  font-style: italic;
-  margin-top: 2px;
-  margin-bottom: 3px;
-  margin-right: 8px;
+/* Post */
+div.post {
+  margin-bottom: 50px;
 }
 
 div.post a {
+  color: #000;
   text-decoration: none;
-  color: #272822;
 }
 
 div.post a:hover {
   text-decoration: underline;
-  color: #272822;
+}
+
+div.post h2 {
+  margin: 0 auto 0 auto;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 25px;
+}
+
+div.post h3 {
+  margin: 3px auto 9px auto;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 17px;
 }
 
 div.post p {
-  font-weight: 400;
-  margin-top: 2px;
+  margin: 0 auto 0 auto;
+  font-family: 'Montserrat', sans-serif;
 }
 
-div.post ul {
-  list-style-type: none;
-  padding: 0;
-  overflow: hidden;
-  margin: 0;
+/* Forms */
+label {
+  font-size: 20px;
+  font-family: 'Montserrat', sans-serif;
 }
 
-div.post li {
-  float: left;
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 5px 0 2px 0;
+  margin: 5px 0 10px 0;
+  display: inline-block;
+  border: none;
+  border-bottom: 1px solid #000;
+  font-size: 18px;
 }
 
-li#author {
-  text-decoration: underline;
-  font-weight: 900px
+input[type=text]:focus, input[type=password]:focus {
+  outline: none;
 }
 
-li#author:hover {
+
+/* Table */
+table {
+  margin-top: 20px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th {
+  text-align: left;
+}
+
+
+td a {
+  color: #000;
   text-decoration: none;
+}
+
+td.right {
+  text-align: right;
+}
+
+.danger {
+  color: #000;
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
 }
