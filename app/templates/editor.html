@@ -13,7 +13,7 @@
       </tr>
       {% for post in posts %}
         <tr>
-          <td>{{ post['title'] }}</td>
+          <td><a href="/post/{{ post['title'] }}">{{ post['title'] }}</a></td>
           <td>{{ post['name'] }}</td>
           <td>{{ post['create_date'] }}</td>
           <td class="right"><a class="action" href="{{ url_for('edit', id=post['id']) }}">Edit</a></td>

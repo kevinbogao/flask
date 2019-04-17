@@ -138,7 +138,8 @@ def all_posts():
 
 
 # User page
-@app.route('/posts/<string:username>')
+#@app.route('/posts/<string:username>')
+@app.route('/<string:username>/posts')
 def user(username):
     """
     TODO: add a go back to all link
@@ -156,7 +157,7 @@ def user(username):
 
 
 # Single post page
-@app.route('/posts/<string:title>')
+@app.route('/post/<string:title>')
 def single_post(title):
     """
     TODO: docstring, maybe redo the query
@@ -172,8 +173,7 @@ def single_post(title):
     post = con.execute(
                 'SELECT posts.title, posts.body, posts.create_date, users.name'
                 ' FROM posts INNER JOIN users ON posts.author_id=users.id'
-                ' WHERE title = ?'
-                ' ORDER BY create_date DESC', [title]
+                ' WHERE title = ?', [title]
     ).fetchone()
     con.close()
     return render_template('post.html', post=post, active='posts')
@@ -208,7 +208,7 @@ def register():
         elif input_pass != confirm_pass:
             error = 'The passwords entered are not the same'
         elif len(input_pass) < 7:
-            error = 'The password will be more than 7 characters'
+            error = 'The password needs to be more than 7 characters'
         elif con.execute(
                 'SELECT id FROM users WHERE username = ?', [username]
         ).fetchone() is not None:
@@ -258,6 +258,8 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
+            session['name'] = user['name']
+            session['username'] = user['username']
             session['logged_in'] = True
 
             flash('You have logged in', 'success')
@@ -378,8 +380,104 @@ def delete(id):
     con.close()
 
     flash('Post deleted', 'success')
-
     return redirect(url_for('editor'))
+
+
+# Account page
+@app.route('/account/<string:id>', methods=['GET', 'POST'])
+@logged_in
+def account(id):
+    """
+    TODO: check if the username is taken
+    """
+
+    con = db_con()
+    user_info = con.execute(
+        'SELECT * FROM users where id = ?', [id]
+    ).fetchone()
+    con.close()
+
+    if user_info['id'] != session['user_id']:
+        flash('Not authorised!', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        name = request.form['name']
+        username = request.form['username']
+        error = None
+
+        if not name:
+            error = 'Name can not be empty'
+        elif not username:
+            error = 'Username can not be empty'
+
+        if error is None:
+            # update session variable
+            # so new name will be displayed
+            session['name'] = name
+            con = db_con()
+            user_info = con.execute(
+                'UPDATE users SET name = ?, username = ?'
+                'WHERE id = ?', [name, username, id]
+            )
+            con.commit()
+            con.close()
+            return redirect(url_for('editor'))
+
+        flash(error, 'error')
+
+    return render_template('account.html', user_info=user_info, active='account')
+
+
+# Password page
+@app.route('/password/<string:id>', methods=['GET', 'POST'])
+@logged_in
+def password(id):
+    """
+    TODO, maybe change user_info to user
+    """
+
+    con = db_con()
+    user_info = con.execute(
+        'SELECT * FROM users where id = ?', [id]
+    ).fetchone()
+
+    if user_info['id'] != session['user_id']:
+        flash('Not authorised!', 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        current_pass = request.form['current_pass']
+        new_pass = request.form['new_pass']
+        confirm_new_pass = request.form['confirm_new_pass']
+        error = None
+
+        if not check_password_hash(user_info['password'], current_pass):
+            error = 'Incorrect password'
+        elif not new_pass:
+            error = 'Please enter a new password'
+        elif not confirm_new_pass:
+            error = 'Please confirm the new password'
+        elif new_pass != confirm_new_pass:
+            error = 'The passwords entered are not the same'
+        elif len(new_pass) < 7:
+            error = 'The password needs to be more than 7 characters'
+
+        if error is None:
+            password = new_pass
+            con.execute(
+                'UPDATE users SET password = ?'
+                ' WHERE id = ?', [generate_password_hash(password), id]
+            )
+            con.commit()
+            con.close()
+            flash('Password changed', 'success')
+            return redirect(url_for('account', id=session['user_id']))
+
+        flash(error, 'error')
+
+    return render_template('password.html', user_info=user_info, active='account')
+
 
 # Logout function
 @app.route('/logout')

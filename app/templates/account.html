@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="container">
+    <form method="post">
+      <ul>
+        <li><h2>Account information</h2></li>
+        <li class="right"><a class="action" href="{{ url_for('password', id=session['user_id'] ) }}">Change password</a></li>
+      </ul>
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" value="{{ request.form['name'] or user_info['name'] }}" required>
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" value="{{ request.form['username'] or user_info['username'] }}" required>
+      <button type="submit" class="btn" value="Update">Update</button>
+    </form>
+  </div>
+      
+{% endblock body %}

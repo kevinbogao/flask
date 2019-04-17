@@ -7,30 +7,35 @@
     <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Overpass" rel="stylesheet">
     <script type="text/javascript" src="../static/main.js"></script>
   </head>
   <body>
-    <!-- navbar start -->
+    <!-- navbar begin -->
     <nav>
-      <ul>
-        <li><a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a></li>
-        <li><a class="{% if active == 'about' %}active{% endif %}" href="/about">About</a></li>
-        <li><a class="{% if active == 'posts' %}active{% endif %}" href="/posts">Posts</a></li>
-        {% if session.logged_in %}
-          <li class="right"><a class="{% if active == 'logout' %}active{% endif %}" href="/logout">Log out</a></li>
-          <li class="right"><a class="{% if active == 'editor' %}active{% endif %}" href="/editor">Editor</a></li>
-        {% else %}
-          <li class="right"><a class="{% if active == 'login' %}active{% endif %}" href="/login">Log in</a></li>
-          <li class="right"><a class="{% if active == 'register' %}active{% endif %}" href="/register">Sign up</a></li>
-        {% endif %}
-      </ul>
-    </nav>
+      <a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a>
+      <a class="{% if active == 'about' %}active{% endif %}" href="/about">About</a>
+      <a class="{% if active == 'posts' %}active{% endif %}" href="/posts">Posts</a>
+      {% if session.logged_in %}
+        <div class="dropdown">
+          <button id="dropbtn" class="{% if active == 'account' %}active{% endif %}">{{ session['name'] }}</button>
+          <div class="dropdown-content">
+            <a class="action" href="{{ url_for('account', id=session['user_id']) }}">Account</a>
+            <a href="/logout">Log out</a>
+          </div>
+        </div>
+        <a id="right" class="{% if active == 'editor' %}active{% endif %}" href="/editor">Editor</a>
+      {% else %}
+        <a id="right" class="{% if active == 'login' %}active{% endif %}" href="/login">Log in</a>
+        <a id="right" class="{% if active == 'register' %}active{% endif %}" href="/register">Sign up</a>
+      {% endif %}
+    </nav> 
     <!-- navbar end -->
-    <main>
+
       <!-- flash message -->
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
-          <div class="{{ category }}">
+          <div id="flash" class="{{ category }}">
             <p>
               {{ message }}
             </p>
@@ -38,6 +43,8 @@
         {% endfor %}
       {% endwith %}
       <!-- flash message -->
+
+    <main>
       <!-- body content -->
       {% block body %}
       {% endblock %}
