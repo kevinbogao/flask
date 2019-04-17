@@ -395,7 +395,6 @@ def account(id):
     user_info = con.execute(
         'SELECT * FROM users where id = ?', [id]
     ).fetchone()
-    con.close()
 
     if user_info['id'] != session['user_id']:
         flash('Not authorised!', 'error')
@@ -410,6 +409,10 @@ def account(id):
             error = 'Name can not be empty'
         elif not username:
             error = 'Username can not be empty'
+        elif con.execute(
+            'SELECT id FROM users WHERE username = ?', [username]
+        ).fetchone() is not None:
+            error = 'Username {} is already taken.'.format(username)
 
         if error is None:
             # update session variable
