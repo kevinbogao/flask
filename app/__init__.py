@@ -409,7 +409,7 @@ def account(id):
             error = 'Name can not be empty'
         elif not username:
             error = 'Username can not be empty'
-        elif con.execute(
+        elif username != session['username'] and con.execute(
             'SELECT id FROM users WHERE username = ?', [username]
         ).fetchone() is not None:
             error = 'Username {} is already taken.'.format(username)
