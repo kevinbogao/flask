@@ -10,11 +10,11 @@ It is a monolithic script, and it may need to be broken
 up into moduals for scaling
 
 XXX TODO:
-- Change the the posts database stracture!
 - Check for the folder first for creating the database
 - Maybe change sqlite to MariaDB
-- Change get_db() and close_db() into my own code
-- Format post url
+- Maybe better urls!
+- Ask the class about the if return else!
+- JS magic (blog display height)
 
 NOTE: recommeded flash messages are
 1. message
