@@ -4,7 +4,7 @@
   <div class="container">
     <form method="post">
       <label for="username">Username</label>
-      <input type="text" name="username" id="username" required>
+      <input type="text" name="username" id="username" value="{{ request.form.username }}" required>
       <label for="password">Password</label>
       <input type="password" name="password" id="password" required>
       <button type="submit" class="btn" value="Log In">Log In</button>

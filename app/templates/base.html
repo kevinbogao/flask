@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width" />
     <title>Blog</title>
     <link rel="stylesheet" href="../static/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato|Overpass" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Montserrat|Noto+Sans|Overpass|Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="text/javascript" src="../static/main.js"></script>
+    <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
   </head>
   <body>
     <!-- navbar begin -->
-    <nav>
+    <nav class="topnav" id="topnav">
       <a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a>
       <a class="{% if active == 'about' %}active{% endif %}" href="/about">About</a>
       <a class="{% if active == 'posts' %}active{% endif %}" href="/posts">Posts</a>
@@ -29,20 +29,23 @@
         <a id="right" class="{% if active == 'login' %}active{% endif %}" href="/login">Log in</a>
         <a id="right" class="{% if active == 'register' %}active{% endif %}" href="/register">Sign up</a>
       {% endif %}
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+      </a>
     </nav> 
     <!-- navbar end -->
 
-      <!-- flash message -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-          <div id="flash" class="{{ category }}">
-            <p>
-              {{ message }}
-            </p>
-          </div>
-        {% endfor %}
-      {% endwith %}
-      <!-- flash message -->
+    <!-- flash message -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div id="flash" class="{{ category }}">
+          <p>
+            {{ message }}
+          </p>
+        </div>
+      {% endfor %}
+    {% endwith %}
+    <!-- flash message -->
 
     <main>
       <!-- body content -->
@@ -50,9 +53,15 @@
       {% endblock %}
       <!-- body content -->
     </main>
-    <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
-    <script>
-      CKEDITOR.replace("body")
+    <script charset="utf-8">
+      function myFunction() {
+        var x = document.getElementById("topnav");
+        if (x.className === "topnav") {
+          x.className += " responsive";
+        } else {
+          x.className = "topnav";
+        }
+      }
     </script>
   </body>
 </html>

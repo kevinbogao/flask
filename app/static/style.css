@@ -16,7 +16,6 @@ main {
   margin-right: 16px;
 }
 
-
 .btn{
   color: #000;
   background-color: #fff;
@@ -108,6 +107,9 @@ nav div.dropdown-content a {
   display: block;
 }
 
+nav .icon {
+  display: none;
+}
 
 /* Posts */ 
 div.container {
@@ -168,12 +170,22 @@ input[type=text]:focus, input[type=password]:focus {
   outline: none;
 }
 
-
 /* Table */
 table {
-  margin-top: 20px;
+  margin-top: 40px;
   border-collapse: collapse;
   width: 100%;
+}
+
+tr.title {
+  border-bottom: 1px solid #000;
+  font-size: 19px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+table tr.row {
+  height: 30px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 table th {
@@ -185,15 +197,24 @@ td a {
   text-decoration: none;
 }
 
-td.right {
-  text-align: right;
+td.title a:hover {
+  text-decoration: underline;
 }
 
-.danger {
+td.right {
+  text-align: right;
+  font-weight: 600;
+}
+
+input.danger {
+  padding: 0;
   color: #000;
   background-color: #fff;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Edit */
@@ -201,8 +222,7 @@ label.body{
   margin-bottom: 5px;
 }
 
-
-/* Account pge */
+/* Account page */
 form ul {
   list-style-type: none;
   padding: 0  0 5px 0;
@@ -270,4 +290,75 @@ form li a {
 
 .success p {
   padding-top: 3px;
+}
+
+/* Responsive */
+@media screen and (max-width: 1280px) {
+  body {
+    max-width: 70vw;
+  }
+  nav {
+    margin-top: 13px;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  body {
+    max-width: 80vw;
+  }
+  nav {
+    margin-top: 7px;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  body {
+    max-width: 85vw;
+  }
+  nav {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  nav a {
+    display: none;
+  }
+  nav a.icon {
+    float: left;
+    display: block;
+  }
+  nav a:hover {
+    border-bottom: 2px solid transparent;
+  }
+  nav a.active {
+    border-bottom: 2px solid transparent;
+  }
+  div.container {
+    padding-top: 0px;
+  }
+  nav.responsive {position: relative;}
+  nav.responsive a.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  nav.responsive a {
+    float: none!important;
+    display: block;
+    text-align: left;
+  }
+  .date {
+    display: none;
+  }
+}
+
+
+
+
+@media screen and (max-width: 480px) {
+  body {
+    max-width: 90vw;
+  }
+  .date {
+    display: none;
+  }
 }
