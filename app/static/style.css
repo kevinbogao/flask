@@ -146,13 +146,13 @@ div.post h3 {
 }
 
 div.post p {
-  margin: 0 auto 2px auto;
+  margin: 0 auto 5px auto;
   line-height: 1.5;
   font-family: 'Montserrat', sans-serif;
 }
 
 div.text {
-  max-height: 100px;
+  max-height: 103px;
   overflow: hidden;
 }
 
