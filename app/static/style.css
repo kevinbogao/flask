@@ -34,7 +34,7 @@ main {
 /* navbar */
 nav {
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 70px;
   overflow: hidden;
   background-color: #fff;
   font-family: 'Roboto', sans-serif;
@@ -115,10 +115,6 @@ nav .icon {
   display: none;
 }
 
-/* Posts */ 
-div.container {
-  padding-top: 30px;
-}
 
 
 /* Post */
@@ -266,35 +262,43 @@ form li a {
 }
 
 /* Flash */
-.error {
-  margin-left: 16px;
+#flash{
+  width: 100%;
+  top: 55px;
+  position: absolute;
   text-align: center;
-  color: #f92772;
-  height: 37px;
-  background-color: #fff;
+  background-color: transparent;
   font-family: 'Montserrat', sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
+
+  animation:flash 0.5s 1;
+  -webkit-animation:flash 0.5s 1;
+  animation-fill-mode: forwards;
+    
+  animation-delay:100s;
+  -webkit-animation-delay:100s;
+  -webkit-animation-fill-mode: forwards;
 }
 
-.error p {
-  padding-top: 3px;
+@keyframes flash{
+    from {opacity :1;}
+    to {opacity :0;}
+}
+
+@-webkit-keyframes flash{
+    from {opacity :1;}
+    to {opacity :0;}
+}
+
+.error {
+  color: #f92772;
 }
 
 .success {
-  margin-left: 16px;
-  text-align: center;
   color: #a6e22d;
-  height: 37px;
-  background-color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 22px;
-  font-weight: 600;
 }
 
-.success p {
-  padding-top: 3px;
-}
 
 /* Responsive */
 @media screen and (max-width: 1280px) {
@@ -302,19 +306,17 @@ form li a {
     max-width: 70vw;
   }
   nav {
-    margin-top: 13px;
+    margin-bottom: 60px;
+  }
+  #flash {
+    top: 50px;
+    font-size: 19px;
   }
 }
-
-
-
 
 @media screen and (max-width: 980px) {
   body {
     max-width: 80vw;
-  }
-  nav {
-    margin-top: 7px;
   }
 }
 
@@ -326,8 +328,7 @@ form li a {
     max-width: 85vw;
   }
   nav {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 50px;
   }
   nav a {
     display: none;
@@ -341,9 +342,6 @@ form li a {
   }
   nav a.active {
     border-bottom: 2px solid transparent;
-  }
-  div.container {
-    padding-top: 0px;
   }
   nav.responsive {
     position: relative;
@@ -360,12 +358,12 @@ form li a {
   .date {
     display: none;
   }
-
   div.dropdown {
     position: absolute;
     top: 0px;
     right: 0px;
   }
+  
 }
 
 

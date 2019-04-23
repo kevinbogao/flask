@@ -316,6 +316,7 @@ def create():
             )
             con.commit()
             con.close()
+            flash("You have successfully uploded your post", 'success')
             return redirect(url_for('all_posts'))
 
         flash(error)
