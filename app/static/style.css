@@ -9,6 +9,7 @@ body {
   padding: 0;
   max-width: 950px;
   font-family: 'Roboto', sans-serif;
+  position: relative;
 }
 
 main {
@@ -63,7 +64,10 @@ nav a.active {
 
 nav div.dropdown {
   float: right;
-  overflow: hidden;
+}
+
+a.action {
+  margin-top: 6px;
 }
 
 nav button#dropbtn {
@@ -86,9 +90,9 @@ nav button#dropbtn.active {
   border-bottom: 2px solid #000;
 }
 
-
 nav div.dropdown-content {
-  display: none;
+  display:  none;
+  float: right;
   position: absolute;
   background-color: #fff;
   z-index: 1;
@@ -302,6 +306,9 @@ form li a {
   }
 }
 
+
+
+
 @media screen and (max-width: 980px) {
   body {
     max-width: 80vw;
@@ -310,6 +317,9 @@ form li a {
     margin-top: 7px;
   }
 }
+
+
+
 
 @media screen and (max-width: 736px) {
   body {
@@ -335,11 +345,12 @@ form li a {
   div.container {
     padding-top: 0px;
   }
-  nav.responsive {position: relative;}
+  nav.responsive {
+    position: relative;
+  }
   nav.responsive a.icon {
-    position: absolute;
-    right: 0;
-    top: 0;
+    float: none;
+    display: block;
   }
   nav.responsive a {
     float: none!important;
@@ -349,9 +360,17 @@ form li a {
   .date {
     display: none;
   }
+
+  div.dropdown {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
 }
 
 
+/*
+*/
 
 
 @media screen and (max-width: 480px) {

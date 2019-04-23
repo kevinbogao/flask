@@ -13,6 +13,9 @@
   <body>
     <!-- navbar begin -->
     <nav class="topnav" id="topnav">
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+      </a>
       <a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a>
       <a class="{% if active == 'about' %}active{% endif %}" href="/about">About</a>
       <a class="{% if active == 'posts' %}active{% endif %}" href="/posts">Posts</a>
@@ -29,9 +32,6 @@
         <a id="right" class="{% if active == 'login' %}active{% endif %}" href="/login">Log in</a>
         <a id="right" class="{% if active == 'register' %}active{% endif %}" href="/register">Sign up</a>
       {% endif %}
-      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-        <i class="fa fa-bars"></i>
-      </a>
     </nav> 
     <!-- navbar end -->
 
