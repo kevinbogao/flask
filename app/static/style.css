@@ -271,34 +271,67 @@ form li a {
   font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 600;
-
-  animation:flash 0.5s 1;
-  -webkit-animation:flash 0.5s 1;
-  animation-fill-mode: forwards;
-    
-  animation-delay:100s;
-  -webkit-animation-delay:100s;
-  -webkit-animation-fill-mode: forwards;
-}
-
-@keyframes flash{
-    from {opacity :1;}
-    to {opacity :0;}
-}
-
-@-webkit-keyframes flash{
-    from {opacity :1;}
-    to {opacity :0;}
 }
 
 .error {
   color: #f92772;
+
+  animation:error 0.5s 1;
+  -webkit-animation:error 0.5s 1;
+  animation-fill-mode: forwards;
+    
+  animation-delay: 10000s;
+  -webkit-animation-delay: 10000s;
+  -webkit-animation-fill-mode: forwards;
 }
 
 .success {
   color: #a6e22d;
+
+  animation:success 0.5s 1;
+  -webkit-animation:success 0.5s 1;
+  animation-fill-mode: forwards;
+    
+  animation-delay: 3s;
+  -webkit-animation-delay: 3s;
+  -webkit-animation-fill-mode: forwards;
 }
 
+@keyframes error{
+  from {
+    opacity :1;
+  }
+  to {
+   opacity :0;
+  }
+}
+
+@-webkit-keyframes error{
+  from {
+    opacity :1;
+  }
+  to {
+    opacity :0;
+  }
+}
+
+@keyframes success{
+  from {
+    opacity :1;
+  }
+  to {
+   opacity :0;
+  }
+}
+
+@-webkit-keyframes success{
+  from {
+    opacity :1;
+  }
+  to {
+    opacity :0;
+  }
+}
 
 /* Responsive */
 @media screen and (max-width: 1280px) {
@@ -362,6 +395,10 @@ form li a {
     position: absolute;
     top: 0px;
     right: 0px;
+  }
+  #flash {
+    position: relative;
+    top: -22px;
   }
   
 }
