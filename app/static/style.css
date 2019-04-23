@@ -116,10 +116,9 @@ nav .icon {
 }
 
 
-
 /* Post */
 div.post {
-  margin-bottom: 50px;
+  margin-bottom: 65px;
 }
 
 div.post a {
@@ -132,21 +131,38 @@ div.post a:hover {
 }
 
 div.post h2 {
-  margin: 0 auto 0 auto;
-  font-family: 'Noto Sans', sans-serif;
-  font-weight: 400;
-  font-size: 25px;
+  margin: 0 auto 10px auto;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 26px;
 }
 
 div.post h3 {
-  margin: 3px auto 9px auto;
+  margin: 0 auto 12px auto;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 17px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 div.post p {
-  margin: 0 auto 0 auto;
+  margin: 0 auto 2px auto;
+  line-height: 1.5;
+  font-family: 'Montserrat', sans-serif;
+}
+
+div.text {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+a.name {
+  font-weight: 600;
+}
+
+a.more {
+  text-decoration: underline!important;
+  font-weight: 600;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -259,6 +275,17 @@ form li a {
   font-size: 22px;
   font-family: 'Noto Sans', sans-serif;
   text-decoration: none;
+}
+
+/* Misc */
+h2.user-posts {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #000;
+  width: 100%;
+  font-weight: 600;
+  font-size: 24px;
+  font-style: italic;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Flash */

@@ -145,6 +145,9 @@ def user(username):
     TODO: add a go back to all link
     """
     con = db_con()
+    name = con.execute(
+        'SELECT name FROM users WHERE username = ?', [username]
+    ).fetchone()
     posts = con.execute(
                 'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
                 ' FROM posts INNER JOIN users ON posts.author_id=users.id'
@@ -152,7 +155,7 @@ def user(username):
                 ' ORDER BY create_date DESC', [username]
     ).fetchall()
     con.close()
-    return render_template('user.html', posts=posts, active='posts')
+    return render_template('user.html', posts=posts, name=name, active='posts')
 
 
 
