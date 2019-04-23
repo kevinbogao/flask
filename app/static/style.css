@@ -9,13 +9,13 @@ body {
   padding: 0;
   max-width: 950px;
   font-family: 'Roboto', sans-serif;
+  position: relative;
 }
 
 main {
   margin-left: 16px;
   margin-right: 16px;
 }
-
 
 .btn{
   color: #000;
@@ -34,7 +34,7 @@ main {
 /* navbar */
 nav {
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 70px;
   overflow: hidden;
   background-color: #fff;
   font-family: 'Roboto', sans-serif;
@@ -64,7 +64,10 @@ nav a.active {
 
 nav div.dropdown {
   float: right;
-  overflow: hidden;
+}
+
+a.action {
+  margin-top: 6px;
 }
 
 nav button#dropbtn {
@@ -87,9 +90,9 @@ nav button#dropbtn.active {
   border-bottom: 2px solid #000;
 }
 
-
 nav div.dropdown-content {
-  display: none;
+  display:  none;
+  float: right;
   position: absolute;
   background-color: #fff;
   z-index: 1;
@@ -108,11 +111,10 @@ nav div.dropdown-content a {
   display: block;
 }
 
-
-/* Posts */ 
-div.container {
-  padding-top: 30px;
+nav .icon {
+  display: none;
 }
+
 
 
 /* Post */
@@ -168,12 +170,22 @@ input[type=text]:focus, input[type=password]:focus {
   outline: none;
 }
 
-
 /* Table */
 table {
-  margin-top: 20px;
+  margin-top: 40px;
   border-collapse: collapse;
   width: 100%;
+}
+
+tr.title {
+  border-bottom: 1px solid #000;
+  font-size: 19px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+table tr.row {
+  height: 30px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 table th {
@@ -185,15 +197,24 @@ td a {
   text-decoration: none;
 }
 
-td.right {
-  text-align: right;
+td.title a:hover {
+  text-decoration: underline;
 }
 
-.danger {
+td.right {
+  text-align: right;
+  font-weight: 600;
+}
+
+input.danger {
+  padding: 0;
   color: #000;
   background-color: #fff;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Edit */
@@ -201,8 +222,7 @@ label.body{
   margin-bottom: 5px;
 }
 
-
-/* Account pge */
+/* Account page */
 form ul {
   list-style-type: none;
   padding: 0  0 5px 0;
@@ -242,32 +262,157 @@ form li a {
 }
 
 /* Flash */
-.error {
-  margin-left: 16px;
+#flash{
+  width: 100%;
+  top: 55px;
+  position: absolute;
   text-align: center;
-  color: #f92772;
-  height: 37px;
-  background-color: #fff;
+  background-color: transparent;
   font-family: 'Montserrat', sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
 }
 
-.error p {
-  padding-top: 3px;
+.error {
+  color: #f92772;
+
+  animation:error 0.5s 1;
+  -webkit-animation:error 0.5s 1;
+  animation-fill-mode: forwards;
+    
+  animation-delay: 10000s;
+  -webkit-animation-delay: 10000s;
+  -webkit-animation-fill-mode: forwards;
 }
 
 .success {
-  margin-left: 16px;
-  text-align: center;
   color: #a6e22d;
-  height: 37px;
-  background-color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 22px;
-  font-weight: 600;
+
+  animation:success 0.5s 1;
+  -webkit-animation:success 0.5s 1;
+  animation-fill-mode: forwards;
+    
+  animation-delay: 3s;
+  -webkit-animation-delay: 3s;
+  -webkit-animation-fill-mode: forwards;
 }
 
-.success p {
-  padding-top: 3px;
+@keyframes error{
+  from {
+    opacity :1;
+  }
+  to {
+   opacity :0;
+  }
+}
+
+@-webkit-keyframes error{
+  from {
+    opacity :1;
+  }
+  to {
+    opacity :0;
+  }
+}
+
+@keyframes success{
+  from {
+    opacity :1;
+  }
+  to {
+   opacity :0;
+  }
+}
+
+@-webkit-keyframes success{
+  from {
+    opacity :1;
+  }
+  to {
+    opacity :0;
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 1280px) {
+  body {
+    max-width: 70vw;
+  }
+  nav {
+    margin-bottom: 60px;
+  }
+  #flash {
+    top: 50px;
+    font-size: 19px;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  body {
+    max-width: 80vw;
+  }
+}
+
+
+
+
+@media screen and (max-width: 736px) {
+  body {
+    max-width: 85vw;
+  }
+  nav {
+    margin-bottom: 50px;
+  }
+  nav a {
+    display: none;
+  }
+  nav a.icon {
+    float: left;
+    display: block;
+  }
+  nav a:hover {
+    border-bottom: 2px solid transparent;
+  }
+  nav a.active {
+    border-bottom: 2px solid transparent;
+  }
+  nav.responsive {
+    position: relative;
+  }
+  nav.responsive a.icon {
+    float: none;
+    display: block;
+  }
+  nav.responsive a {
+    float: none!important;
+    display: block;
+    text-align: left;
+  }
+  .date {
+    display: none;
+  }
+  div.dropdown {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+  #flash {
+    position: relative;
+    top: -22px;
+  }
+  
+}
+
+
+/*
+*/
+
+
+@media screen and (max-width: 480px) {
+  body {
+    max-width: 90vw;
+  }
+  .date {
+    display: none;
+  }
 }

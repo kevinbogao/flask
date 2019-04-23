@@ -34,9 +34,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # Create database if it doesn't exsist
 DB_PATH = "database/app.sqlite"
 
-if os.path.isfile(DB_PATH):
-    pass
-else:
+if not os.path.isfile(DB_PATH):
     # create file
     os.mknod(DB_PATH)
     # change file permission
@@ -97,11 +95,13 @@ def logged_in(view):
     """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
+
         if 'logged_in' in session:
             return view(**kwargs)
-        else:
-            flash('Please login to view this page', 'error')
-            return redirect(url_for('login'))
+
+        flash('Please login to view this page', 'error')
+        return redirect(url_for('login'))
+
     return wrapped_view
 
 
@@ -197,18 +197,10 @@ def register():
         error = None
 
         # error message
-        if not name:
-            error = 'Name is required'
-        elif not username:
-            error = 'Username is required'
-        elif not input_pass:
-            error = 'Please enter a password'
-        elif not confirm_pass:
-            error = 'Please confirm your passwd'
-        elif input_pass != confirm_pass:
+        if input_pass != confirm_pass:
             error = 'The passwords entered are not the same'
         elif len(input_pass) < 7:
-            error = 'The password needs to be more than 7 characters'
+            error = 'Passwords do not match'
         elif con.execute(
                 'SELECT id FROM users WHERE username = ?', [username]
         ).fetchone() is not None:
@@ -242,16 +234,20 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        con = db_con()
-
         error = None
+
+        con = db_con()
 
         user = con.execute(
             'SELECT * FROM users WHERE username = ?', [username]
         ).fetchone()
 
-        if user is None:
+        if not username:
+            error = 'Please enter your username'
+        elif user is None:
             error = 'Username not found'
+        elif not password:
+            error = 'Please enter your password'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
@@ -311,9 +307,7 @@ def create():
         if not title:
             error = 'Title is required.'
 
-        if error is not None:
-            flash(error)
-        else:
+        if error is None:
             con = db_con()
             con.execute(
                 'INSERT INTO posts (author_id, title, body)'
@@ -322,7 +316,10 @@ def create():
             )
             con.commit()
             con.close()
+            flash("You have successfully uploded your post", 'success')
             return redirect(url_for('all_posts'))
+
+        flash(error)
 
     return render_template('create.html', active='editor')
 
@@ -351,9 +348,7 @@ def edit(id):
         if not title:
             error = 'Title is required.'
 
-        if error is not None:
-            flash(error)
-        else:
+        if error is None:
             con = db_con()
             post = con.execute(
                 'UPDATE posts SET title = ?, body = ?'
@@ -363,6 +358,8 @@ def edit(id):
             con.commit()
             con.close()
             return redirect(url_for('editor'))
+
+        flash(error)
 
     return render_template('edit.html', post=post)
 
@@ -435,7 +432,7 @@ def account(id):
 # Password page
 @app.route('/password/<string:id>', methods=['GET', 'POST'])
 @logged_in
-def password(id):
+def change_password(id):
     """
     TODO, maybe change user_info to user
     """
