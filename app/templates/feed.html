@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="container">
+    <!-- <ul class="user-posts"> -->
+    <!--   <li><h2>Followed users</h2></li> -->
+    <!--   <li class="right"><a class="action" href="">Your followings</a></li> -->
+    <!-- </ul> -->
+    {% if followed %}
+      {% for post in posts %}
+        <div class="post">
+          <h2><a href="/post/{{ post['title'] }}">{{ post['title'] }}</a></h2>
+          <h3>by <a class="name" href="/{{ post['username'] }}/posts">{{ post['name'] }}</a> on {{ post['create_date'] }}</h3>
+          <div class="text">
+            <p>{{ post['body']|safe }}</p>
+          </div>
+          <a class="more" href="/post/{{ post['title'] }}">Read more ...</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h2 id="placeholder">You have not followed anyone yet</h2>
+    {% endif %}
+  </div>
+{% endblock %}

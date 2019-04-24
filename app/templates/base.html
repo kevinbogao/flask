@@ -17,9 +17,12 @@
       <a href="javascript:void(0);" class="icon" onclick="myFunction()">
         <i class="fa fa-bars"></i>
       </a>
-      <a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a>
+      <a class="{% if active == 'posts' %}active{% endif %}" href="/">Posts</a>
+      {% if session.logged_in %}
+      <a class="{% if active == 'feed' %}active{% endif %}" href="/feed">Feed</a>
+      {% endif %}
       <a class="{% if active == 'about' %}active{% endif %}" href="/about">About</a>
-      <a class="{% if active == 'posts' %}active{% endif %}" href="/posts">Posts</a>
+      <!-- <a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a> -->
       {% if session.logged_in %}
         <div class="dropdown">
           <button id="dropbtn" class="{% if active == 'account' %}active{% endif %}">{{ session['name'] }}</button>

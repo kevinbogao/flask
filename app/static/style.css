@@ -236,7 +236,7 @@ input.danger {
 }
 
 /* Edit */
-label.body{
+label.body {
   margin-bottom: 5px;
 }
 
@@ -279,15 +279,66 @@ form li a {
   text-decoration: none;
 }
 
-/* Misc */
-h2.user-posts {
-  margin-bottom: 30px;
-  border-bottom: 2px solid #000;
-  width: 100%;
-  font-weight: 600;
-  font-size: 24px;
-  font-style: italic;
+ul.user-posts {
+  list-style-type: none;
+  padding: 0  0 5px 0;
+  margin-bottom: 55px;
+  overflow: hidden;
+}
+
+ul.user-posts li {
+  float: left;
+  display: block;
+  text-align: center;
+}
+
+li.right {
+  float: right!important;
+}
+
+ul.user-posts li h2 {
   font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+li.right input {
+  color: #000;
+  background-color: #fff;
+  padding: 0;
+  margin: 0;
+  height: 37px;
+  border: none;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'Noto Sans', sans-serif;
+  text-decoration: none;
+}
+
+li.right a {
+  color: #000;
+  background-color: #fff;
+  margin: 13px 0;
+  height: 37px;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'Noto Sans', sans-serif;
+  text-decoration: none;
+}
+
+h2#placeholder {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 25px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 /* Flash */
@@ -382,9 +433,6 @@ h2.user-posts {
   }
 }
 
-
-
-
 @media screen and (max-width: 736px) {
   body {
     max-width: 85vw;
@@ -429,13 +477,7 @@ h2.user-posts {
     position: relative;
     top: -22px;
   }
-  
 }
-
-
-/*
-*/
-
 
 @media screen and (max-width: 480px) {
   body {
@@ -444,4 +486,18 @@ h2.user-posts {
   .date {
     display: none;
   }
+}
+
+/* About */
+div.about h2 {
+  margin: 0 auto 10px auto;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+}
+
+div.about p {
+  margin: 0 auto 5px auto;
+  line-height: 1.5;
+  font-family: 'Montserrat', sans-serif;
 }

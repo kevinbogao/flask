@@ -2,11 +2,29 @@
 
 {% block body %}
   <div class="container">
-    <h2 class="user-posts">Posts by {{ name['name'] }}</h2>
+    <ul class="user-posts">
+      <li><h2>{{ name['name'] }}'s posts</h2></li>
+      <!-- ensure the user is logged and is not the same user -->
+      {% if session.logged_in and session['user_id'] != name['id'] %}
+        {% if followed %}
+          <li class="right">
+            <form action="{{ url_for('unfollow', id=name['id']) }}" method="post">
+              <input type="submit" value="Unfollow">
+            </form>
+          </li>
+        {% else %}
+          <li class="right">
+            <form action="{{ url_for('follow', id=name['id']) }}" method="post">
+              <input type="submit" value="Follow">
+            </form>
+          </li>
+        {% endif %}
+      {% endif %}
+    </ul>
     {% for post in posts %}
       <div class="post">
         <h2><a href="/post/{{ post['title'] }}">{{ post['title'] }}</a></h2>
-        <h3>{{ post['create_date'] }}</h3>
+        <h3>on {{ post['create_date'] }}</h3>
         <div class="text">
           <p>{{ post['body']|safe }}</p>
         </div>

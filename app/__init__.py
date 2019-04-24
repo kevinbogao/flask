@@ -65,6 +65,15 @@ if not os.path.isfile(DB_PATH):
                     FOREIGN KEY (author_id) REFERENCES users (id)
                 );
               """)
+
+    # id may not be needed
+    CUR.execute("""
+                CREATE TABLE followers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    follower_id INTEGER,
+                    followed_id INTEGER
+                );
+              """)
     # commit change?
     CON.commit()
     # close connection
@@ -103,22 +112,8 @@ def logged_in(view):
     return wrapped_view
 
 
-# Home page
-@app.route('/')
-def home():
-    """Renders the home page template"""
-    return render_template('home.html', active='home')
-
-
-# About page
-@app.route('/about')
-def about():
-    """Renders the about page template"""
-    return render_template('about.html', active='about')
-
-
 # Posts page
-@app.route('/posts')
+@app.route('/')
 def all_posts():
     """Renders the posts template which displays all posts that were
     posted on the site.
@@ -135,43 +130,37 @@ def all_posts():
     return render_template('posts.html', posts=posts, active='posts')
 
 
-# User page
-@app.route('/<string:username>/posts')
-def user(username):
-    """Renders the template for all posts posted by a specific user
-    TODO: add a go back to all link
-    """
+# About page
+@app.route('/about')
+def about():
+    """Renders the about page template"""
+    return render_template('about.html', active='about')
+
+
+# Feed page
+@app.route('/feed')
+@logged_in
+def feed():
     con = db_con()
-    name = con.execute(
-        'SELECT name FROM users WHERE username = ?', [username]
-    ).fetchone()
+    followed = con.execute(
+        'SELECT followed_id FROM followers WHERE follower_id = ?', [session['user_id']]
+    ).fetchall()
+
+    # return followed_id as a sting
+    sql_key = ''
+    for item in followed:
+        item = str(item['followed_id'])
+        sql_key += '{}, '.format(item)
+    sql_key = sql_key[:-2]
+
     posts = con.execute(
                 'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
                 ' FROM posts INNER JOIN users ON posts.author_id=users.id'
-                ' WHERE users.username = ?'
-                ' ORDER BY create_date DESC', [username]
+                ' WHERE posts.author_id IN ({})'
+                ' ORDER BY create_date DESC'.format(sql_key)
     ).fetchall()
     con.close()
-    return render_template('user.html', posts=posts, name=name, active='posts')
-
-
-
-# Single post page
-@app.route('/post/<string:title>')
-def single_post(title):
-    """Renders the template for a specific post
-    Args:
-        title (str): the title of the specified post
-    """
-    con = db_con()
-    #post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
-    post = con.execute(
-                'SELECT posts.title, posts.body, posts.create_date, users.name'
-                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
-                ' WHERE title = ?', [title]
-    ).fetchone()
-    con.close()
-    return render_template('post.html', post=post, active='posts')
+    return render_template('feed.html', posts=posts, followed=followed, active='feed')
 
 
 # Registration page
@@ -189,10 +178,10 @@ def register():
         input_pass = request.form['input_pass']
         confirm_pass = request.form['confirm_pass']
 
-        con = db_con()
-
         # reset error message
         error = None
+
+        con = db_con()
 
         # error message
         if name.isspace() or username.isspace():
@@ -238,7 +227,6 @@ def login():
         error = None
 
         con = db_con()
-
         user = con.execute(
             'SELECT * FROM users WHERE username = ?', [username]
         ).fetchone()
@@ -254,8 +242,8 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
             session['name'] = user['name']
+            session['user_id'] = user['id']
             session['username'] = user['username']
             session['logged_in'] = True
 
@@ -267,6 +255,59 @@ def login():
     return render_template('login.html', active='login')
 
 
+# Single post page
+@app.route('/post/<string:title>')
+def single_post(title):
+    """Renders the template for a specific post
+    Args:
+        title (str): the title of the specified post
+    """
+    con = db_con()
+    #post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
+    post = con.execute(
+                'SELECT posts.title, posts.body, posts.create_date, users.name'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE title = ?', [title]
+    ).fetchone()
+    con.close()
+    return render_template('post.html', post=post, active='posts')
+
+
+# User page
+@app.route('/<string:username>/posts', methods=['GET', 'POST'])
+def user(username):
+    """Renders the template for all posts posted by a specific user
+    TODO: add a go back to all link
+    """
+    con = db_con()
+    name = con.execute(
+        'SELECT * FROM users WHERE username = ?', [username]
+    ).fetchone()
+    posts = con.execute(
+                'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE users.username = ?'
+                ' ORDER BY create_date DESC', [username]
+    ).fetchall()
+
+    # maybe just check if the user is logged_in
+    if session.get('logged_in'):
+
+        if session['logged_in'] == True:
+
+            # check if the user has follow the blogger
+            followed = con.execute(
+                'SELECT * FROM followers WHERE follower_id = ? AND followed_id = ?',
+                [session['user_id'], name['id']]
+            ).fetchall()
+
+
+            return render_template('user.html', posts=posts, followed=followed, name=name, active='posts')
+
+    con.close()
+    return render_template('user.html', posts=posts, name=name, active='posts')
+
+
 # Editor page
 @app.route('/editor')
 def editor():
@@ -274,8 +315,6 @@ def editor():
     View for all the posts the user has made, if no post have been made,
     the user will be redirected the create page
     """
-
-    error = None
     con = db_con()
     posts = con.execute(
                 'SELECT posts.id, posts.title, posts.body, posts.create_date, users.name'
@@ -288,8 +327,8 @@ def editor():
     if posts:
         return render_template('editor.html', active='editor', posts=posts)
 
-    error = "You have not yet posted"
-    flash(error, 'error')
+    flash('You have not yet posted', 'error')
+
     return render_template('create.html', active='editor')
 
 
@@ -346,6 +385,7 @@ def edit(id):
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
+
         error = None
 
         if title.isspace() or body.isspace():
@@ -422,7 +462,7 @@ def account(id):
 
         if error is None:
             # update session variable
-            # so new name will be displayed
+            # and the new name will be displayed
             session['name'] = name
             con = db_con()
             user_info = con.execute(
@@ -496,6 +536,41 @@ def logout():
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
+
+
+# Follow user function
+@app.route('/follow/<string:id>', methods=['POST'])
+@logged_in
+def follow(id):
+    con = db_con()
+    con.execute(
+        'INSERT INTO followers (follower_id, followed_id) VALUES(?, ?)',
+        [session['user_id'], id]
+    )
+    con.commit()
+    con.close()
+    return redirect(url_for('feed'))
+
+
+# Unfollow user function
+@app.route('/unfollow/<string:id>', methods=['POST'])
+@logged_in
+def unfollow(id):
+    con = db_con()
+    con.execute(
+        'DELETE FROM followers WHERE follower_id = ? AND followed_id = ?',
+        [session['user_id'], id]
+    )
+    con.commit()
+    con.close()
+    return redirect(url_for('feed'))
+
+
+# Following page
+@app.route('/following')
+@logged_in
+def following():
+    pass
 
 
 if (__name__) == '__main__':
