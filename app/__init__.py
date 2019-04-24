@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 """Flask backend
 
-Note: The code severs as backend for a simple blog;
+Note: The file severs as backend for a simple blog;
 it handles registration, logins, and more
 
 Notes on __init__.py
 --------------------
 It is a monolithic script, and it may need to be broken
-up into moduals for scaling
+up into modules for scaling
 
 XXX TODO:
 - Check for the folder first for creating the database
 - Maybe change sqlite to MariaDB
 - Maybe better urls!
-- Ask the class about the if return else!
 - JS magic (blog display height)
 
-NOTE: recommeded flash messages are
+NOTE: recommended flash messages are
 1. message
 2. error
 3. info
@@ -66,6 +65,15 @@ if not os.path.isfile(DB_PATH):
                     FOREIGN KEY (author_id) REFERENCES users (id)
                 );
               """)
+
+    # id may not be needed
+    CUR.execute("""
+                CREATE TABLE followers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    follower_id INTEGER,
+                    followed_id INTEGER
+                );
+              """)
     # commit change?
     CON.commit()
     # close connection
@@ -80,7 +88,7 @@ app.secret_key = 'dev'
 # database connection
 def db_con():
     """Establishs connection to the database
-    return the data as a dictionary
+    returns the data as a dictionary
     """
     con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
@@ -91,7 +99,6 @@ def db_con():
 def logged_in(view):
     """Return a new function that warps the orginal view,
     the new function check if the user is logged in
-
     """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -105,24 +112,10 @@ def logged_in(view):
     return wrapped_view
 
 
-# Home page
-@app.route('/')
-def home():
-    """Returns the home page template"""
-    return render_template('home.html', active='home')
-
-
-# About page
-@app.route('/about')
-def about():
-    """Returns the about page template"""
-    return render_template('about.html', active='about')
-
-
 # Posts page
-@app.route('/posts')
+@app.route('/')
 def all_posts():
-    """Returns the posts template which displays all posts that were
+    """Renders the posts template which displays all posts that were
     posted on the site.
     All the posts are extracted from the sqlite database, users and posts
     table
@@ -137,53 +130,47 @@ def all_posts():
     return render_template('posts.html', posts=posts, active='posts')
 
 
-# User page
-#@app.route('/posts/<string:username>')
-@app.route('/<string:username>/posts')
-def user(username):
-    """
-    TODO: add a go back to all link
-    """
+# About page
+@app.route('/about')
+def about():
+    """Renders the about page template"""
+    return render_template('about.html', active='about')
+
+
+# Feed page
+@app.route('/feed')
+@logged_in
+def feed():
     con = db_con()
+    followed = con.execute(
+        'SELECT followed_id FROM followers WHERE follower_id = ?', [session['user_id']]
+    ).fetchall()
+
+    # return followed_id as a sting
+    sql_key = ''
+    for item in followed:
+        item = str(item['followed_id'])
+        sql_key += '{}, '.format(item)
+    sql_key = sql_key[:-2]
+
     posts = con.execute(
                 'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
                 ' FROM posts INNER JOIN users ON posts.author_id=users.id'
-                ' WHERE users.username = ?'
-                ' ORDER BY create_date DESC', [username]
+                ' WHERE posts.author_id IN ({})'
+                ' ORDER BY create_date DESC'.format(sql_key)
     ).fetchall()
     con.close()
-    return render_template('user.html', posts=posts, active='posts')
-
-
-
-# Single post page
-@app.route('/post/<string:title>')
-def single_post(title):
-    """
-    TODO: docstring, maybe redo the query
-    Args:
-        title (str): the title of the selected post
-
-    Returns:
-        The rendered template (full view) of the selected post
-
-    """
-    con = db_con()
-    #post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
-    post = con.execute(
-                'SELECT posts.title, posts.body, posts.create_date, users.name'
-                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
-                ' WHERE title = ?', [title]
-    ).fetchone()
-    con.close()
-    return render_template('post.html', post=post, active='posts')
+    return render_template('feed.html', posts=posts, followed=followed, active='feed')
 
 
 # Registration page
 @app.route('/register', methods=('GET', 'POST'))
 def register():
-    """Returns the registration template
-    The user is instructed to
+    """Renders the registration template
+    It takes the user's name, username and passwords, the passwords
+    will be compared, and it's only stored when they are the same
+    The user will be redirected to the login page if they have registered
+    successfully
     """
     if request.method == 'POST':
         name = request.form['name']
@@ -191,13 +178,15 @@ def register():
         input_pass = request.form['input_pass']
         confirm_pass = request.form['confirm_pass']
 
-        con = db_con()
-
         # reset error message
         error = None
 
+        con = db_con()
+
         # error message
-        if input_pass != confirm_pass:
+        if name.isspace() or username.isspace():
+            error = 'Name or username can not be empty'
+        elif input_pass != confirm_pass:
             error = 'The passwords entered are not the same'
         elif len(input_pass) < 7:
             error = 'Passwords do not match'
@@ -225,10 +214,11 @@ def register():
 
 
 # Login page
-@app.route('/login', methods=('GET', 'POST'))
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    """
-    TODO: docstring
+    """Renders the login template
+    The user is prompted to enter their username and password, and redirected to
+    the editor page once successful
     """
     if request.method == 'POST':
         username = request.form['username']
@@ -237,7 +227,6 @@ def login():
         error = None
 
         con = db_con()
-
         user = con.execute(
             'SELECT * FROM users WHERE username = ?', [username]
         ).fetchone()
@@ -253,8 +242,8 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
             session['name'] = user['name']
+            session['user_id'] = user['id']
             session['username'] = user['username']
             session['logged_in'] = True
 
@@ -266,16 +255,67 @@ def login():
     return render_template('login.html', active='login')
 
 
+# Single post page
+@app.route('/post/<string:title>')
+def single_post(title):
+    """Renders the template for a specific post
+    Args:
+        title (str): the title of the specified post
+    """
+    con = db_con()
+    #post = con.execute("SELECT * FROM posts WHERE title = ?", [title]).fetchone()
+    post = con.execute(
+                'SELECT posts.title, posts.body, posts.create_date, users.name'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE title = ?', [title]
+    ).fetchone()
+    con.close()
+    return render_template('post.html', post=post, active='posts')
+
+
+# User page
+@app.route('/<string:username>/posts', methods=['GET', 'POST'])
+def user(username):
+    """Renders the template for all posts posted by a specific user
+    TODO: add a go back to all link
+    """
+    con = db_con()
+    name = con.execute(
+        'SELECT * FROM users WHERE username = ?', [username]
+    ).fetchone()
+    posts = con.execute(
+                'SELECT posts.title, posts.body, posts.create_date, users.name, users.username'
+                ' FROM posts INNER JOIN users ON posts.author_id=users.id'
+                ' WHERE users.username = ?'
+                ' ORDER BY create_date DESC', [username]
+    ).fetchall()
+
+    # maybe just check if the user is logged_in
+    if session.get('logged_in'):
+
+        if session['logged_in'] == True:
+
+            # check if the user has follow the blogger
+            followed = con.execute(
+                'SELECT * FROM followers WHERE follower_id = ? AND followed_id = ?',
+                [session['user_id'], name['id']]
+            ).fetchall()
+
+
+            return render_template('user.html', posts=posts, followed=followed, name=name, active='posts')
+
+    con.close()
+    return render_template('user.html', posts=posts, name=name, active='posts')
+
+
 # Editor page
 @app.route('/editor')
 def editor():
-    """
-    TODO: docstring
+    """Renders the editor template
+    View for all the posts the user has made, if no post have been made,
+    the user will be redirected the create page
     """
     con = db_con()
-
-    error = None
-
     posts = con.execute(
                 'SELECT posts.id, posts.title, posts.body, posts.create_date, users.name'
                 ' FROM posts INNER JOIN users ON posts.author_id=users.id'
@@ -283,20 +323,22 @@ def editor():
                 ' ORDER BY create_date DESC', [session['user_id']]
     ).fetchall()
     con.close()
+
     if posts:
         return render_template('editor.html', active='editor', posts=posts)
 
-    error = "You have not posted any post yet"
-    flash(error, 'error')
+    flash('You have not yet posted', 'error')
+
     return render_template('create.html', active='editor')
 
 
 # Create page
-@app.route('/create', methods=('GET', 'POST'))
+@app.route('/create', methods=['GET', 'POST'])
 @logged_in
 def create():
-    """
-    TODO: docstring
+    """Renders the create template
+    Allow the user to make a post by prompting the user for a title and a body.
+    The user will be redirected back to editor page once done
     """
     if request.method == 'POST':
         title = request.form['title']
@@ -304,7 +346,7 @@ def create():
 
         error = None
 
-        if not title:
+        if title.isspace() or body.isspace():
             error = 'Title is required.'
 
         if error is None:
@@ -325,11 +367,11 @@ def create():
 
 
 # Edit post
-@app.route('/edit/<string:id>', methods=('GET', 'POST'))
+@app.route('/edit/<string:id>', methods=['GET', 'POST'])
 @logged_in
 def edit(id):
-    """
-    TODO: docstring
+    """Renders the edit template
+    Allows the user to edit a specific post they have made
     """
 
     con = db_con()
@@ -343,23 +385,30 @@ def edit(id):
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
+
         error = None
 
-        if not title:
-            error = 'Title is required.'
+        if title.isspace() or body.isspace():
+            error = 'Both fileds must not be empty'
 
         if error is None:
-            con = db_con()
-            post = con.execute(
-                'UPDATE posts SET title = ?, body = ?'
-                ' WHERE id = ?',
-                [title, body, id]
-            )
-            con.commit()
-            con.close()
+            if title != post['title'] or body != post['body']:
+
+                con = db_con()
+                post = con.execute(
+                    'UPDATE posts SET title = ?, body = ?'
+                    ' WHERE id = ?',
+                    [title, body, id]
+                )
+                con.commit()
+                con.close()
+                flash('Changes saved', 'success')
+                return redirect(url_for('editor'))
+
+            flash('No Changes were made', 'success')
             return redirect(url_for('editor'))
 
-        flash(error)
+        flash(error, 'error')
 
     return render_template('edit.html', post=post)
 
@@ -368,8 +417,7 @@ def edit(id):
 @app.route('/delete/<string:id>', methods=['POST'])
 @logged_in
 def delete(id):
-    """
-    TODO: docstring
+    """Function for deleting a post
     """
     con = db_con()
     con.execute('DELETE FROM posts WHERE id = ?', [id])
@@ -384,8 +432,9 @@ def delete(id):
 @app.route('/account/<string:id>', methods=['GET', 'POST'])
 @logged_in
 def account(id):
-    """
-    TODO: check if the username is taken
+    """Renders the account template
+    Allows the user to change their name and/or username, and provides a link
+    for the user to change their password
     """
 
     con = db_con()
@@ -402,9 +451,9 @@ def account(id):
         username = request.form['username']
         error = None
 
-        if not name:
+        if not name or name.isspace():
             error = 'Name can not be empty'
-        elif not username:
+        elif not username or username.isspace():
             error = 'Username can not be empty'
         elif username != session['username'] and con.execute(
             'SELECT id FROM users WHERE username = ?', [username]
@@ -413,7 +462,7 @@ def account(id):
 
         if error is None:
             # update session variable
-            # so new name will be displayed
+            # and the new name will be displayed
             session['name'] = name
             con = db_con()
             user_info = con.execute(
@@ -433,8 +482,8 @@ def account(id):
 @app.route('/password/<string:id>', methods=['GET', 'POST'])
 @logged_in
 def change_password(id):
-    """
-    TODO, maybe change user_info to user
+    """Renders the password template
+    Functions are similar to the registration page
     """
 
     con = db_con()
@@ -483,12 +532,45 @@ def change_password(id):
 @app.route('/logout')
 @logged_in
 def logout():
-    """
-    TODO: docstring
-    """
+    """function for logging out"""
     session.clear()
     flash('You are now logged out', 'success')
     return redirect(url_for('login'))
+
+
+# Follow user function
+@app.route('/follow/<string:id>', methods=['POST'])
+@logged_in
+def follow(id):
+    con = db_con()
+    con.execute(
+        'INSERT INTO followers (follower_id, followed_id) VALUES(?, ?)',
+        [session['user_id'], id]
+    )
+    con.commit()
+    con.close()
+    return redirect(url_for('feed'))
+
+
+# Unfollow user function
+@app.route('/unfollow/<string:id>', methods=['POST'])
+@logged_in
+def unfollow(id):
+    con = db_con()
+    con.execute(
+        'DELETE FROM followers WHERE follower_id = ? AND followed_id = ?',
+        [session['user_id'], id]
+    )
+    con.commit()
+    con.close()
+    return redirect(url_for('feed'))
+
+
+# Following page
+@app.route('/following')
+@logged_in
+def following():
+    pass
 
 
 if (__name__) == '__main__':

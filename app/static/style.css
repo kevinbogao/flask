@@ -91,6 +91,7 @@ nav button#dropbtn.active {
 }
 
 nav div.dropdown-content {
+  right: 0;
   display:  none;
   float: right;
   position: absolute;
@@ -104,7 +105,8 @@ nav div.dropdown-content a {
   padding: 0;
   text-decoration: none;
   display: block;
-  text-align: left;
+  text-align: right;
+  z-index: 2;
 }
 
 .dropdown:hover .dropdown-content {
@@ -116,10 +118,9 @@ nav .icon {
 }
 
 
-
 /* Post */
 div.post {
-  margin-bottom: 50px;
+  margin-bottom: 65px;
 }
 
 div.post a {
@@ -132,21 +133,38 @@ div.post a:hover {
 }
 
 div.post h2 {
-  margin: 0 auto 0 auto;
-  font-family: 'Noto Sans', sans-serif;
-  font-weight: 400;
-  font-size: 25px;
+  margin: 0 auto 10px auto;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 26px;
 }
 
 div.post h3 {
-  margin: 3px auto 9px auto;
+  margin: 0 auto 12px auto;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 17px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 div.post p {
-  margin: 0 auto 0 auto;
+  margin: 0 auto 5px auto;
+  line-height: 1.5;
+  font-family: 'Montserrat', sans-serif;
+}
+
+div.text {
+  max-height: 103px;
+  overflow: hidden;
+}
+
+a.name {
+  font-weight: 600;
+}
+
+a.more {
+  text-decoration: underline!important;
+  font-weight: 600;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -218,7 +236,7 @@ input.danger {
 }
 
 /* Edit */
-label.body{
+label.body {
   margin-bottom: 5px;
 }
 
@@ -259,6 +277,68 @@ form li a {
   font-size: 22px;
   font-family: 'Noto Sans', sans-serif;
   text-decoration: none;
+}
+
+ul.user-posts {
+  list-style-type: none;
+  padding: 0  0 5px 0;
+  margin-bottom: 55px;
+  overflow: hidden;
+}
+
+ul.user-posts li {
+  float: left;
+  display: block;
+  text-align: center;
+}
+
+li.right {
+  float: right!important;
+}
+
+ul.user-posts li h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+li.right input {
+  color: #000;
+  background-color: #fff;
+  padding: 0;
+  margin: 0;
+  height: 37px;
+  border: none;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'Noto Sans', sans-serif;
+  text-decoration: none;
+}
+
+li.right a {
+  color: #000;
+  background-color: #fff;
+  margin: 13px 0;
+  height: 37px;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'Noto Sans', sans-serif;
+  text-decoration: none;
+}
+
+h2#placeholder {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 25px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 /* Flash */
@@ -353,9 +433,6 @@ form li a {
   }
 }
 
-
-
-
 @media screen and (max-width: 736px) {
   body {
     max-width: 85vw;
@@ -400,13 +477,7 @@ form li a {
     position: relative;
     top: -22px;
   }
-  
 }
-
-
-/*
-*/
-
 
 @media screen and (max-width: 480px) {
   body {
@@ -415,4 +486,18 @@ form li a {
   .date {
     display: none;
   }
+}
+
+/* About */
+div.about h2 {
+  margin: 0 auto 10px auto;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+}
+
+div.about p {
+  margin: 0 auto 5px auto;
+  line-height: 1.5;
+  font-family: 'Montserrat', sans-serif;
 }
