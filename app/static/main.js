@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
   // replace textarea with CKEDITOR
-  CKEDITOR.replace("body")
+  CKEDITOR.replace("body");
 
   // responsive
   function myFunction() {

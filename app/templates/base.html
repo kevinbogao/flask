@@ -12,6 +12,7 @@
     <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
   </head>
   <body>
+
     <!-- navbar begin -->
     <nav class="topnav" id="topnav">
       <a href="javascript:void(0);" class="icon" onclick="myFunction()">
@@ -22,7 +23,6 @@
       <a class="{% if active == 'feed' %}active{% endif %}" href="/feed">Feed</a>
       {% endif %}
       <a class="{% if active == 'about' %}active{% endif %}" href="/about">About</a>
-      <!-- <a class="{% if active == 'home' %}active{% endif %}" href="/">Home</a> -->
       {% if session.logged_in %}
         <div class="dropdown">
           <button id="dropbtn" class="{% if active == 'account' %}active{% endif %}">{{ session['name'] }}</button>
@@ -57,6 +57,7 @@
       {% endblock %}
       <!-- body content -->
     </main>
+
     <script charset="utf-8">
       function myFunction() {
         var x = document.getElementById("topnav");
@@ -67,5 +68,6 @@
         }
       }
     </script>
+
   </body>
 </html>
