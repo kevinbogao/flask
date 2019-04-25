@@ -141,6 +141,7 @@ def about():
 @app.route('/feed')
 @logged_in
 def feed():
+    """Renders the feed template"""
     con = db_con()
     followed = con.execute(
         'SELECT followed_id FROM followers WHERE follower_id = ?', [session['user_id']]
@@ -485,7 +486,6 @@ def change_password(id):
     """Renders the password template
     Functions are similar to the registration page
     """
-
     con = db_con()
     user_info = con.execute(
         'SELECT * FROM users where id = ?', [id]
@@ -542,6 +542,7 @@ def logout():
 @app.route('/follow/<string:id>', methods=['POST'])
 @logged_in
 def follow(id):
+    """A function for following a user"""
     con = db_con()
     name = con.execute(
         'SELECT name FROM users where id = ?', [id]
@@ -561,6 +562,7 @@ def follow(id):
 @app.route('/unfollow/<string:id>', methods=['POST'])
 @logged_in
 def unfollow(id):
+    """A function for unfollowing a user"""
     con = db_con()
     name = con.execute(
         'SELECT name FROM users where id = ?', [id]

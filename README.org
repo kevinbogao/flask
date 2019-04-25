@@ -12,9 +12,10 @@ You may need to create the /database/ folder in the project's directory next to 
    flask run --host=0.0.0.0 --port=80
    #+end_src
 ** Build With
-   * Flask - A microframework for Python based on Werkzeug, Jinja
+   * [[http://flask.pocoo.org/][Flask]] - A microframework for Python based on Werkzeug, Jinja
 ** Acknowledgment
-   * The flask tutorial
+   * [[http://flask.pocoo.org/docs/1.0/tutorial/#tutorial][The Flask tutorial]]
+
 
 
 
