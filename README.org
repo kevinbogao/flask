@@ -1,7 +1,9 @@
 * The Useless Blog
-This is a project built for my foundation's semester. In term of the code itself, I can only say that:
-
-When I wrote this, only God and I understood what I was doing. Now, only God knows.
+To sum up the code itself:
+#+begin_quote
+When I wrote this, only God and I understood what I was doing. Now, only God
+knows. -- Karl Weierstrass
+#+end_quote
 
 ** Functionalities
    - Registartion and login
@@ -14,9 +16,10 @@ When I wrote this, only God and I understood what I was doing. Now, only God kno
 *** Requirements
     - Python >= 3.6
     - Flask
-      #+begin_src 
-      pip install -U Flask
-      #+end_src
+
+#+begin_src 
+pip install -U Flask
+#+end_src
 
 *** Running
     You may need to create the /database/ folder in the project's directory next to the /app/ folder.
