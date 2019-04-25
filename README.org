@@ -1,1 +1,10 @@
-* sudo rm -rf /*
+* Flask blog
+This is a blog site built with basic CRUD functionality, and utilises Flask as backend. Please register an account if you would like to post an article. Once you have logged in, you could follow other users for a more personalised feed. If you have any questions or other matters, please contact me at someemailaddressdotcom
+** Getting started
+*** Prerequisites
+    #+begin_src 
+    python >= 3.6
+    Flask
+    #+end_src
+
+

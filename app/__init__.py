@@ -543,12 +543,17 @@ def logout():
 @logged_in
 def follow(id):
     con = db_con()
+    name = con.execute(
+        'SELECT name FROM users where id = ?', [id]
+    ).fetchone()
     con.execute(
         'INSERT INTO followers (follower_id, followed_id) VALUES(?, ?)',
         [session['user_id'], id]
     )
     con.commit()
     con.close()
+    msg = "You are now following {}".format(name['name'])
+    flash(msg, 'success')
     return redirect(url_for('feed'))
 
 
@@ -557,11 +562,16 @@ def follow(id):
 @logged_in
 def unfollow(id):
     con = db_con()
+    name = con.execute(
+        'SELECT name FROM users where id = ?', [id]
+    ).fetchone()
     con.execute(
         'DELETE FROM followers WHERE follower_id = ? AND followed_id = ?',
         [session['user_id'], id]
     )
     con.commit()
+    msg = "You have unfollowed {}".format(name['name'])
+    flash(msg, 'success')
     con.close()
     return redirect(url_for('feed'))
 

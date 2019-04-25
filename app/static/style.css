@@ -133,14 +133,14 @@ div.post a:hover {
 }
 
 div.post h2 {
-  margin: 0 auto 10px auto;
+  margin: 0 auto 15px auto;
   font-family: 'Raleway', sans-serif;
   font-weight: 600;
   font-size: 26px;
 }
 
 div.post h3 {
-  margin: 0 auto 12px auto;
+  margin: 0 auto 10px auto;
   font-style: italic;
   font-weight: 500;
   font-size: 17px;
