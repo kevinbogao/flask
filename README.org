@@ -1,23 +1,31 @@
-* Flask blog
-This is a blog site built with basic CRUD functionality, and utilises Flask as backend. Please register an account if you would like to post an article. Once you have logged in, you could follow other users for a more personalised feed. If you have any questions or other matters, please contact me at
+* The Useless Blog
+This is a project built for my foundation's semester. In term of the code itself, I can only say that:
+
+When I wrote this, only God and I understood what I was doing. Now, only God knows.
+
+** Functionalities
+   - Registartion and login
+   - Basic account management
+   - Post, edit, delete articles
+   - Following other users
+   - And more...
+   
 ** Getting started
 *** Requirements
+    - Python >= 3.6
+    - Flask
+      #+begin_src 
+      pip install -U Flask
+      #+end_src
+
+*** Running
+    You may need to create the /database/ folder in the project's directory next to the /app/ folder.
     #+begin_src 
-    python >= 3.6
-    Flask
+    flask run 
     #+end_src
-** Deployment
-You may need to create the /database/ folder in the project's directory next to the /app/ folder. You should also change the key and remove the debug flask
-   #+begin_src 
-   flask run --host=0.0.0.0 --port=80
-   #+end_src
+
 ** Build With
-   * [[http://flask.pocoo.org/][Flask]] - A microframework for Python based on Werkzeug, Jinja
+   * [[http://flask.pocoo.org/][Flask]] - A microframework for Python based on Werkzeug and Jinja2
+
 ** Acknowledgment
    * [[http://flask.pocoo.org/docs/1.0/tutorial/#tutorial][The Flask tutorial]]
-
-
-
-
-
-
