@@ -31,4 +31,4 @@ pip install -U Flask
    * [[http://flask.pocoo.org/][Flask]] - A microframework for Python based on Werkzeug and Jinja2
 
 ** Acknowledgment
-   * [[http://flask.pocoo.org/docs/1.0/tutorial/#tutorial][The Flask tutorial]]
+   * [[http://flask.pocoo.org/docs/1.0/tutorial/#tutorial][Flask tutorial]]
