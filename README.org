@@ -1,10 +1,22 @@
 * Flask blog
-This is a blog site built with basic CRUD functionality, and utilises Flask as backend. Please register an account if you would like to post an article. Once you have logged in, you could follow other users for a more personalised feed. If you have any questions or other matters, please contact me at someemailaddressdotcom
+This is a blog site built with basic CRUD functionality, and utilises Flask as backend. Please register an account if you would like to post an article. Once you have logged in, you could follow other users for a more personalised feed. If you have any questions or other matters, please contact me at
 ** Getting started
-*** Prerequisites
+*** Requirements
     #+begin_src 
     python >= 3.6
     Flask
     #+end_src
+** Deployment
+You may need to create the /database/ folder in the project's directory next to the /app/ folder. You should also change the key and remove the debug flask
+   #+begin_src 
+   flask run --host=0.0.0.0 --port=80
+   #+end_src
+** Build With
+   * Flask - A microframework for Python based on Werkzeug, Jinja
+** Acknowledgment
+   * The flask tutorial
+
+
+
 
 
