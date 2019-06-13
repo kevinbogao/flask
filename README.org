@@ -1,9 +1,5 @@
-* The Useless Blog
+* The Flask Blog
 To sum up the code itself:
-#+begin_quote
-When I wrote this, only God and I understood what I was doing. Now, only God
-knows. -- Karl Weierstrass
-#+end_quote
 
 ** Functionalities
    - Registartion and login
