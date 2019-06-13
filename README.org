@@ -1,5 +1,5 @@
 * The Flask Blog
-To sum up the code itself:
+
 
 ** Functionalities
    - Registartion and login
